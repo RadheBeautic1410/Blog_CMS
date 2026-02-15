@@ -32,13 +32,34 @@ export default async function EditAuthorPage({
     notFound();
   }
 
+  // Transform author data to match AuthorForm interface
+  const transformedAuthor = {
+    id: author.id,
+    name: author.name,
+    email: author.email,
+    bio: author.bio,
+    avatar: author.avatar,
+    website: author.website,
+    socialLinks:
+      author.socialLinks &&
+      typeof author.socialLinks === "object" &&
+      !Array.isArray(author.socialLinks)
+        ? (author.socialLinks as {
+            twitter?: string;
+            linkedin?: string;
+            github?: string;
+            facebook?: string;
+          })
+        : null,
+  };
+
   return (
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-[#111827]">Edit Author</h1>
         <p className="mt-2 text-gray-600">Update author information</p>
       </div>
-      <AuthorForm author={author} />
+      <AuthorForm author={transformedAuthor} />
     </div>
   );
 }

@@ -8,16 +8,16 @@ import ImageUpload from "./ImageUpload";
 interface Author {
   id: string;
   name: string;
-  email?: string;
-  bio?: string;
-  avatar?: string;
-  website?: string;
+  email?: string | null;
+  bio?: string | null;
+  avatar?: string | null;
+  website?: string | null;
   socialLinks?: {
     twitter?: string;
     linkedin?: string;
     github?: string;
     facebook?: string;
-  };
+  } | null;
 }
 
 interface AuthorFormProps {
@@ -46,13 +46,30 @@ export default function AuthorForm({ author }: AuthorFormProps) {
     setError("");
 
     try {
-      const socialLinks: any = {};
+      const socialLinks: {
+        twitter?: string;
+        linkedin?: string;
+        github?: string;
+        facebook?: string;
+      } = {};
       if (formData.twitter) socialLinks.twitter = formData.twitter;
       if (formData.linkedin) socialLinks.linkedin = formData.linkedin;
       if (formData.github) socialLinks.github = formData.github;
       if (formData.facebook) socialLinks.facebook = formData.facebook;
 
-      const payload: any = {
+      const payload: {
+        name: string;
+        email: string | null;
+        bio: string | null;
+        avatar: string | null;
+        website: string | null;
+        socialLinks: {
+          twitter?: string;
+          linkedin?: string;
+          github?: string;
+          facebook?: string;
+        } | null;
+      } = {
         name: formData.name,
         email: formData.email || null,
         bio: formData.bio || null,
@@ -82,8 +99,8 @@ export default function AuthorForm({ author }: AuthorFormProps) {
 
       router.push("/admin/authors");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
       setLoading(false);
     }
   };

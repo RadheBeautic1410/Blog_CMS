@@ -182,7 +182,9 @@ export default function RichTextEditor({
             }
           }
         }
-        node = node.parentNode;
+        const parent = node.parentNode;
+        if (!parent) break;
+        node = parent;
       }
     }
   };
@@ -667,7 +669,9 @@ export default function RichTextEditor({
                   handleInput();
                   return;
                 }
-                blockquote = blockquote.parentNode;
+                const parent = blockquote.parentNode;
+                if (!parent) break;
+                blockquote = parent;
               }
               
               // Wrap in blockquote
@@ -836,7 +840,9 @@ export default function RichTextEditor({
                         return;
                       }
                     }
-                    listElement = listElement.parentNode;
+                    const parent = listElement.parentNode;
+                    if (!parent) break;
+                    listElement = parent;
                   }
                   
                   // Not in a list, create new one
@@ -873,7 +879,7 @@ export default function RichTextEditor({
                   let listElement = range.commonAncestorContainer;
                   while (listElement && listElement !== editorRef.current) {
                     if (listElement.nodeType === Node.ELEMENT_NODE) {
-                      const el = listElement as Element;
+                      const el = listElement as HTMLElement;
                       if (el.tagName === 'UL') {
                         el.style.listStyleType = e.target.value;
                         setSelectedBulletStyle(e.target.value);
@@ -882,7 +888,9 @@ export default function RichTextEditor({
                         return;
                       }
                     }
-                    listElement = listElement.parentNode;
+                    const parent = listElement.parentNode;
+                    if (!parent) break;
+                    listElement = parent;
                   }
                 }
               }}
@@ -910,7 +918,7 @@ export default function RichTextEditor({
                   let listElement = range.commonAncestorContainer;
                   while (listElement && listElement !== editorRef.current) {
                     if (listElement.nodeType === Node.ELEMENT_NODE) {
-                      const el = listElement as Element;
+                      const el = listElement as HTMLElement;
                       if (el.tagName === 'OL') {
                         el.style.listStyleType = e.target.value;
                         setSelectedNumberStyle(e.target.value);
@@ -919,7 +927,9 @@ export default function RichTextEditor({
                         return;
                       }
                     }
-                    listElement = listElement.parentNode;
+                    const parent = listElement.parentNode;
+                    if (!parent) break;
+                    listElement = parent;
                   }
                 }
               }}

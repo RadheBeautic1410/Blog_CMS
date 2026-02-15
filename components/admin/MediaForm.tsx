@@ -8,14 +8,14 @@ interface Media {
   id: string;
   name: string;
   url: string;
-  alt?: string;
-  caption?: string;
-  description?: string;
-  mimeType?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  folder?: string;
+  alt?: string | null;
+  caption?: string | null;
+  description?: string | null;
+  mimeType?: string | null;
+  size?: number | null;
+  width?: number | null;
+  height?: number | null;
+  folder?: string | null;
 }
 
 interface MediaFormProps {

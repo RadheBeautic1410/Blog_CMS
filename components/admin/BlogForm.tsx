@@ -14,7 +14,7 @@ interface Category {
 interface Author {
   id: string;
   name: string;
-  email?: string;
+  email?: string | null;
 }
 
 interface Blog {
@@ -27,9 +27,9 @@ interface Blog {
   image: string;
   tags: string[];
   status: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  authorId?: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  authorId?: string | null;
 }
 
 interface BlogFormProps {
@@ -285,7 +285,7 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
                   {/* Show current author even if not in list (might have been deleted) */}
                   {blog?.authorId && !authors.some(a => a.id === blog.authorId) && (
                     <option value={blog.authorId} disabled>
-                      {blog.author} (Not Found)
+                      Author (Not Found)
                     </option>
                   )}
                   {authors.map((author) => (
