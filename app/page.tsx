@@ -1,65 +1,203 @@
-import Image from "next/image";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import BlogCard from "@/components/BlogCard";
+import CategoryCard from "@/components/CategoryCard";
+import Newsletter from "@/components/Newsletter";
+import Footer from "@/components/Footer";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
-export default function Home() {
+async function getFeaturedBlogs() {
+  try {
+    const blogs = await prisma.blog.findMany({
+      where: {
+        featured: true,
+        status: "published",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 6,
+    });
+    return blogs;
+  } catch (error) {
+    console.error("Error fetching featured blogs:", error);
+    return [];
+  }
+}
+
+async function getLatestBlogs() {
+  try {
+    const blogs = await prisma.blog.findMany({
+      where: {
+        status: "published",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 6,
+    });
+    return blogs;
+  } catch (error) {
+    console.error("Error fetching latest blogs:", error);
+    return [];
+  }
+}
+
+async function getCategories() {
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    // Calculate actual blog counts for each category
+    const categoriesWithCounts = await Promise.all(
+      categories.map(async (category) => {
+        const blogCount = await prisma.blog.count({
+          where: {
+            category: category.name,
+            status: "published",
+          },
+        });
+        return {
+          ...category,
+          count: blogCount,
+        };
+      })
+    );
+
+    return categoriesWithCounts;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const [featuredBlogs, latestBlogs, categories] = await Promise.all([
+    getFeaturedBlogs(),
+    getLatestBlogs(),
+    getCategories(),
+  ]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen bg-[#F9FAFB]">
+      <Navbar />
+      <main>
+        {/* Hero Section */}
+        <Hero />
+
+        {/* Featured Blog Section */}
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+                Featured Posts
+              </h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Handpicked articles you don't want to miss
+              </p>
+            </div>
+            {featuredBlogs.length > 0 ? (
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {featuredBlogs.map((blog) => (
+                  <BlogCard key={blog.id} blog={blog} featured />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                <p>No featured posts available yet.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Latest Blogs Section */}
+        <section className="py-16 bg-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+                  Latest Articles
+                </h2>
+                <p className="mt-4 text-lg text-gray-600">
+                  Stay updated with our newest content
+                </p>
+              </div>
+            </div>
+            {latestBlogs.length > 0 ? (
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {latestBlogs.map((blog) => (
+                  <BlogCard key={blog.id} blog={blog} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                <p>No articles available yet.</p>
+              </div>
+            )}
+            <div className="mt-12 text-center">
+              <Link
+                href="/blogs"
+                className="inline-flex items-center rounded-lg bg-[#2563EB] px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors"
+              >
+                View All Blogs
+                <svg
+                  className="ml-2 h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Categories Section */}
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+                Browse by Category
+              </h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Explore articles by topic
+              </p>
+            </div>
+            {categories.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+                {categories.map((category) => (
+                  <CategoryCard
+                    key={category.slug}
+                    name={category.name}
+                    slug={category.slug}
+                    count={category.count}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                <p>No categories available yet.</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Newsletter Section */}
+        <Newsletter />
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

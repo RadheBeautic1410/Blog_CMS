@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Blog {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  slug          String   @unique
+  excerpt       String   // Short Description
+  content       String   // Rich Text Content
+  author        String
+  authorId      String?  // Reference to Author
+  category      String
+  categoryId    String?  // Reference to Category
+  image         String   // Featured Image
+  tags          String[] // Array of tags
+  status        String   @default("draft") // draft, published
+  metaTitle     String?
+  metaDescription String?
+  featured      Boolean  @default(false)
+  date          DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("blogs")
+}
+
+model Category {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String @unique
+  slug  String @unique
+  count Int    @default(0)
+
+  @@map("categories")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin") // admin, editor, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Author {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String?  @unique
+  bio         String?
+  avatar      String?  // Profile image URL
+  website     String?
+  socialLinks Json?    // { twitter, linkedin, github, etc. }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("authors")
+}
+
+model Media {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  url         String   @unique
+  alt         String?
+  caption     String?
+  description String?
+  mimeType    String?  // image/jpeg, image/png, etc.
+  size        Int?     // File size in bytes
+  width       Int?     // Image width in pixels
+  height      Int?     // Image height in pixels
+  folder      String?  // blogs, authors, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("media")
+}
