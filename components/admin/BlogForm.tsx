@@ -66,17 +66,23 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
     metaTitle: blog?.metaTitle || "",
     metaDescription: blog?.metaDescription || "",
   });
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   // Auto-generate slug from title
   useEffect(() => {
-    if (!blog) {
+    if (formData.title && !slugManuallyEdited) {
       const slug = formData.title
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
         .replace(/(^-|-$)/g, "");
-      setFormData((prev) => ({ ...prev, slug }));
+      if (slug && slug !== formData.slug) {
+        setFormData((prev) => ({ ...prev, slug }));
+      }
     }
-  }, [formData.title, blog]);
+  }, [formData.title, slugManuallyEdited]);
 
   // Update authorId when blog data is loaded
   useEffect(() => {
@@ -89,6 +95,9 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    
+    // Dispatch event for header buttons
+    window.dispatchEvent(new CustomEvent("blog-form-loading"));
 
     try {
       const tagsArray = formData.tags
@@ -123,11 +132,14 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
     } catch (err: any) {
       setError(err.message || "An error occurred");
       setLoading(false);
+      // Dispatch event for header buttons
+      window.dispatchEvent(new CustomEvent("blog-form-complete"));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form id="blog-form" onSubmit={handleSubmit} className="space-y-6">
+
       {error && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
@@ -184,7 +196,10 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
             id="slug"
             required
             value={formData.slug}
-            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+            onChange={(e) => {
+              setSlugManuallyEdited(true);
+              setFormData({ ...formData, slug: e.target.value });
+            }}
             className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
             placeholder="blog-post-slug"
           />

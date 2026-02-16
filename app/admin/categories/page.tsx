@@ -9,7 +9,7 @@ async function getCategories(page: number = 1) {
   try {
     const skip = (page - 1) * ITEMS_PER_PAGE;
     
-    const [categories, total] = await Promise.all([
+    const [categoriesData, total] = await Promise.all([
       prisma.category.findMany({
         orderBy: { name: "asc" },
         skip,
@@ -17,6 +17,22 @@ async function getCategories(page: number = 1) {
       }),
       prisma.category.count(),
     ]);
+
+    // Calculate actual blog counts for each category
+    const categories = await Promise.all(
+      categoriesData.map(async (category) => {
+        const blogCount = await prisma.blog.count({
+          where: {
+            category: category.name,
+            status: "published",
+          },
+        });
+        return {
+          ...category,
+          count: blogCount,
+        };
+      })
+    );
 
     return {
       categories,

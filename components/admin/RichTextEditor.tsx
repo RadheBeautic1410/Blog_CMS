@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import MediaLibraryModal from "./MediaLibraryModal";
 
 interface RichTextEditorProps {
   value: string;
@@ -25,6 +26,7 @@ export default function RichTextEditor({
   const [selectedListType, setSelectedListType] = useState("");
   const [selectedBulletStyle, setSelectedBulletStyle] = useState("");
   const [selectedNumberStyle, setSelectedNumberStyle] = useState("");
+  const [showMediaModal, setShowMediaModal] = useState(false);
   const [activeButtons, setActiveButtons] = useState({
     bold: false,
     italic: false,
@@ -213,6 +215,101 @@ export default function RichTextEditor({
     document.execCommand(command, false, value);
     editorRef.current?.focus();
     handleInput();
+  };
+
+  const handleImageSelect = (url: string, alt?: string) => {
+    console.log('handleImageSelect called with:', url, alt);
+    if (!editorRef.current) {
+      console.error('Editor ref is null');
+      return;
+    }
+    
+    // Ensure editor has focus
+    editorRef.current.focus();
+    
+    // Wait a bit for focus to be established
+    setTimeout(() => {
+      if (!editorRef.current) {
+        console.error('Editor ref is null in timeout');
+        return;
+      }
+      
+      const selection = window.getSelection();
+      let range: Range | null = null;
+      
+      // Try to get existing selection
+      if (selection && selection.rangeCount > 0) {
+        range = selection.getRangeAt(0);
+        // Check if range is within the editor
+        if (!editorRef.current.contains(range.commonAncestorContainer)) {
+          console.log('Range not in editor, creating new range');
+          range = null;
+        }
+      }
+      
+      // If no valid range, create one at the end of editor content
+      if (!range) {
+        range = document.createRange();
+        const editor = editorRef.current;
+        
+        // Try to find the last text node or create a range at the end
+        if (editor.lastChild) {
+          range.setStartAfter(editor.lastChild);
+          range.setEndAfter(editor.lastChild);
+        } else {
+          range.setStart(editor, 0);
+          range.setEnd(editor, 0);
+        }
+        
+        // Update selection
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+      
+      // Create image element
+      const img = document.createElement("img");
+      img.src = url;
+      if (alt) {
+        img.alt = alt;
+      }
+      img.style.maxWidth = "100%";
+      img.style.height = "auto";
+      img.style.display = "block";
+      img.style.margin = "10px 0";
+      
+      // Insert image
+      try {
+        range.deleteContents();
+        range.insertNode(img);
+        console.log('Image inserted successfully');
+        
+        // Add a line break after image for better editing
+        const br = document.createElement("br");
+        range.setStartAfter(img);
+        range.collapse(true);
+        range.insertNode(br);
+        
+        // Move cursor after the line break
+        range.setStartAfter(br);
+        range.collapse(true);
+        
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      } catch (error) {
+        console.error("Error inserting image:", error);
+        // Fallback: append to editor
+        editorRef.current.appendChild(img);
+        const br = document.createElement("br");
+        editorRef.current.appendChild(br);
+      }
+      
+      editorRef.current.focus();
+      handleInput();
+    }, 100);
   };
 
   const toggleHtmlMode = () => {
@@ -622,10 +719,7 @@ export default function RichTextEditor({
 
           {/* Image */}
           <ToolbarButton
-            onClick={() => {
-              const url = prompt("Enter image URL:");
-              if (url) execCommand("insertImage", url);
-            }}
+            onClick={() => setShowMediaModal(true)}
             title="Insert Image"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -992,6 +1086,13 @@ export default function RichTextEditor({
           pointer-events: none;
         }
       `}</style>
+
+      {/* Media Library Modal */}
+      <MediaLibraryModal
+        isOpen={showMediaModal}
+        onClose={() => setShowMediaModal(false)}
+        onSelect={handleImageSelect}
+      />
     </div>
   );
 }
