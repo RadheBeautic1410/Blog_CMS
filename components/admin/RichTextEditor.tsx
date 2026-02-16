@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import MediaLibraryModal from "./MediaLibraryModal";
+import LinkModal from "./LinkModal";
 
 interface RichTextEditorProps {
   value: string;
@@ -27,6 +28,9 @@ export default function RichTextEditor({
   const [selectedBulletStyle, setSelectedBulletStyle] = useState("");
   const [selectedNumberStyle, setSelectedNumberStyle] = useState("");
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkModalUrl, setLinkModalUrl] = useState("");
+  const [linkModalText, setLinkModalText] = useState("");
   const [activeButtons, setActiveButtons] = useState({
     bold: false,
     italic: false,
@@ -400,6 +404,115 @@ export default function RichTextEditor({
     }
   };
 
+  const handleOpenLinkModal = () => {
+    const selection = window.getSelection();
+    let url = "";
+    let text = "";
+
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      
+      // Get selected text
+      text = selection.toString();
+
+      // Check if selection is inside an existing link
+      let node = range.commonAncestorContainer;
+      if (node.nodeType === Node.TEXT_NODE) {
+        node = node.parentNode as Node;
+      }
+      
+      const linkElement = (node as Element).closest?.("a");
+      if (linkElement) {
+        url = linkElement.getAttribute("href") || "";
+        // If no text was selected, use the link's text content
+        if (!text) {
+          text = linkElement.textContent || "";
+        }
+      }
+    }
+
+    setLinkModalUrl(url);
+    setLinkModalText(text);
+    setShowLinkModal(true);
+  };
+
+  const handleInsertLink = (url: string, text?: string) => {
+    if (!editorRef.current) return;
+
+    editorRef.current.focus();
+    const selection = window.getSelection();
+    
+    if (!selection || selection.rangeCount === 0) {
+      // If no selection, insert link at cursor
+      const linkText = text || url;
+      const linkHtml = `<a href="${url}">${linkText}</a>`;
+      execCommand("insertHTML", linkHtml);
+      handleInput();
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const selectedText = selection.toString();
+
+    // Check if selection is inside an existing link
+    let node = range.commonAncestorContainer;
+    if (node.nodeType === Node.TEXT_NODE) {
+      node = node.parentNode as Node;
+    }
+    
+    const linkElement = (node as Element).closest?.("a");
+    if (linkElement) {
+      // Update existing link
+      linkElement.setAttribute("href", url);
+      if (text) {
+        linkElement.textContent = text;
+      }
+      handleInput();
+      return;
+    }
+
+    // If there's selected text, wrap it in a link
+    if (selectedText) {
+      const linkText = text || selectedText;
+      const linkHtml = `<a href="${url}">${linkText}</a>`;
+      
+      try {
+        range.deleteContents();
+        execCommand("insertHTML", linkHtml);
+        handleInput();
+      } catch (e) {
+        // Fallback: use createLink and then update text if needed
+        execCommand("createLink", url);
+        if (text && text !== selectedText) {
+          // Update the link text if different
+          setTimeout(() => {
+            const newSelection = window.getSelection();
+            if (newSelection && newSelection.rangeCount > 0) {
+              const newRange = newSelection.getRangeAt(0);
+              let linkNode = newRange.commonAncestorContainer;
+              if (linkNode.nodeType === Node.TEXT_NODE) {
+                linkNode = linkNode.parentNode as Node;
+              }
+              const newLinkElement = (linkNode as Element).closest?.("a");
+              if (newLinkElement) {
+                newLinkElement.textContent = linkText;
+                handleInput();
+              }
+            }
+          }, 0);
+        } else {
+          handleInput();
+        }
+      }
+    } else {
+      // No selected text, insert link with provided text or URL
+      const linkText = text || url;
+      const linkHtml = `<a href="${url}">${linkText}</a>`;
+      execCommand("insertHTML", linkHtml);
+      handleInput();
+    }
+  };
+
   const ToolbarButton = ({
     onClick,
     title,
@@ -706,10 +819,7 @@ export default function RichTextEditor({
 
           {/* Link */}
           <ToolbarButton
-            onClick={() => {
-              const url = prompt("Enter URL:");
-              if (url) execCommand("createLink", url);
-            }}
+            onClick={handleOpenLinkModal}
             title="Insert Link"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1092,6 +1202,13 @@ export default function RichTextEditor({
         isOpen={showMediaModal}
         onClose={() => setShowMediaModal(false)}
         onSelect={handleImageSelect}
+      />
+      <LinkModal
+        isOpen={showLinkModal}
+        onClose={() => setShowLinkModal(false)}
+        onInsert={handleInsertLink}
+        initialUrl={linkModalUrl}
+        initialText={linkModalText}
       />
     </div>
   );

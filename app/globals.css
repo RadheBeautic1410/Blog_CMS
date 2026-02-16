@@ -142,6 +142,35 @@ body {
   font-weight: 600;
 }
 
+.rich-text-editor [contenteditable] code {
+  background-color: #F3F4F6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #111827;
+}
+
+.rich-text-editor [contenteditable] pre {
+  background-color: #111827;
+  color: #F9FAFB;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.rich-text-editor [contenteditable] pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
 /* Blog Content Styles */
 .blog-content {
   @apply text-gray-700 leading-relaxed;
