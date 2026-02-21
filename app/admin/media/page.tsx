@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import Image from "next/image";
 import DeleteMediaButton from "@/components/admin/DeleteMediaButton";
 import Pagination from "@/components/admin/Pagination";
-import MediaUploadButton from "@/components/admin/MediaUploadButton";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -63,7 +62,6 @@ export default async function MediaLibraryPage({
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <MediaUploadButton folder="media" />
           {/* View Toggle */}
           <div className="flex items-center rounded-lg border border-[#E5E7EB] bg-white">
             <Link

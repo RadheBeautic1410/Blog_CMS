@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import CategoryCard from "@/components/CategoryCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { FlowerIcon } from "@/components/icons";
+import Link from "next/link";
 
 async function getCategories() {
   try {
@@ -49,177 +51,137 @@ export default async function CategoriesPage() {
   const emptyCategories = categories.filter((cat) => cat.count === 0);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-indigo-50/20">
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-[#111827] sm:text-5xl mb-4">
-            Browse Categories
-          </h1>
-          <p className="text-lg text-gray-600 mb-2">
-            Explore articles organized by topic
-          </p>
-          <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
-            <span>
-              <span className="font-semibold text-[#111827]">{categories.length}</span> categories
-            </span>
-            <span>•</span>
-            <span>
-              <span className="font-semibold text-[#111827]">{totalArticles}</span> total articles
-            </span>
-            <span>•</span>
-            <span>
-              <span className="font-semibold text-[#111827]">{categoriesWithArticles.length}</span> active categories
-            </span>
-          </div>
+      <main className="relative overflow-hidden">
+        {/* Decorative flowers */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <FlowerIcon className="absolute -right-16 top-32 h-32 w-32 fill-indigo-200/25" aria-hidden />
+          <FlowerIcon className="absolute -left-12 top-1/2 h-24 w-24 fill-violet-200/20" aria-hidden />
+          <FlowerIcon className="absolute right-1/3 bottom-20 h-20 w-20 fill-emerald-200/20" aria-hidden />
         </div>
 
-        {/* Categories with Articles */}
-        {categoriesWithArticles.length > 0 ? (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-[#111827] mb-6">
-              All Categories
-            </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {categoriesWithArticles.map((category) => (
-                <CategoryCard
-                  key={category.id}
-                  name={category.name}
-                  slug={category.slug}
-                  count={category.count}
-                />
-              ))}
+        {/* Hero header */}
+        <section className="relative px-4 pt-16 pb-14 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-5 inline-flex items-center justify-center">
+              <FlowerIcon className="flower-spin h-12 w-12 fill-indigo-500" aria-hidden />
             </div>
-          </section>
-        ) : (
-          <div className="text-center py-12">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-              />
-            </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">
-              No categories with articles yet
-            </h3>
-            <p className="mt-2 text-sm text-gray-500">
-              Categories will appear here once articles are published.
+            <h1 className="font-display text-4xl font-bold tracking-tight text-[#111827] sm:text-5xl">
+              Browse Categories
+            </h1>
+            <p className="mt-5 text-lg text-slate-600 max-w-xl mx-auto">
+              Explore articles organized by topic. Find what interests you.
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200/80">
+                <span className="font-semibold text-indigo-600">{categories.length}</span> categories
+              </span>
+              <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200/80">
+                <span className="font-semibold text-indigo-600">{totalArticles}</span> articles
+              </span>
+              <span className="rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-200/80">
+                <span className="font-semibold text-indigo-600">{categoriesWithArticles.length}</span> active
+              </span>
+            </div>
           </div>
-        )}
+        </section>
 
-        {/* Empty Categories (if any) */}
-        {emptyCategories.length > 0 && (
-          <section className="mt-12 pt-12 border-t border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-600 mb-4">
-              Empty Categories
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {emptyCategories.map((category) => (
-                <div
-                  key={category.id}
-                  className="rounded-lg border border-gray-200 bg-white p-4 opacity-60"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-700">
-                        {category.name}
-                      </h3>
-                      <p className="mt-1 text-xs text-gray-500">No articles</p>
-                    </div>
-                    <div className="rounded-full bg-gray-100 p-2">
-                      <svg
-                        className="h-4 w-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              ))}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
+          {/* Categories with Articles */}
+          {categoriesWithArticles.length > 0 ? (
+            <section className="mb-16">
+              <h2 className="font-display text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span className="h-1 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
+                All Categories
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {categoriesWithArticles.map((category, i) => (
+                  <CategoryCard
+                    key={category.id}
+                    name={category.name}
+                    slug={category.slug}
+                    count={category.count}
+                    index={i}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : (
+            <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/80 py-16 text-center">
+              <FlowerIcon className="mx-auto h-14 w-14 fill-slate-300" aria-hidden />
+              <h3 className="mt-4 font-display text-xl font-semibold text-slate-800">
+                No categories with articles yet
+              </h3>
+              <p className="mt-2 text-sm text-slate-500 max-w-sm mx-auto">
+                Categories will appear here once articles are published.
+              </p>
             </div>
-          </section>
-        )}
+          )}
 
-        {/* Popular Categories Section */}
-        {categoriesWithArticles.length > 4 && (
-          <section className="mt-12 pt-12 border-t border-gray-200">
-            <h2 className="text-2xl font-bold text-[#111827] mb-6">
-              Most Popular Categories
-            </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {categoriesWithArticles.slice(0, 6).map((category) => (
-                <div
-                  key={category.id}
-                  className="relative overflow-hidden rounded-lg border-2 border-[#2563EB] bg-gradient-to-br from-[#2563EB]/5 to-[#1D4ED8]/5 p-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold text-[#111827]">
-                        {category.name}
-                      </h3>
-                      <p className="mt-2 text-sm text-gray-600">
-                        {category.count === 1
-                          ? "1 article"
-                          : `${category.count} articles`}
-                      </p>
-                      <a
-                        href={`/categories/${category.slug}`}
-                        className="mt-4 inline-flex items-center text-sm font-medium text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
-                      >
-                        View all articles
-                        <svg
-                          className="ml-1 h-4 w-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </a>
+          {/* Most Popular - highlight top categories */}
+          {categoriesWithArticles.length > 4 && (
+            <section className="mb-16 pt-12 border-t border-slate-200/80">
+              <h2 className="font-display text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span className="h-1 w-8 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500" />
+                Most Popular
+              </h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {categoriesWithArticles.slice(0, 6).map((category, i) => (
+                  <Link
+                    key={category.id}
+                    href={`/categories/${category.slug}`}
+                    className="group relative overflow-hidden rounded-2xl border-2 border-dashed border-indigo-200/70 bg-gradient-to-br from-indigo-50/90 to-violet-50/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-indigo-300"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600/90">
+                          #{i + 1} popular
+                        </span>
+                        <h3 className="mt-2 font-display text-xl font-bold text-slate-900">
+                          {category.name}
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">
+                          {category.count === 1 ? "1 article" : `${category.count} articles`}
+                        </p>
+                        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 group-hover:gap-2 transition-all">
+                          View all
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div className="rounded-xl bg-white/80 p-3 text-indigo-500">
+                        <FlowerIcon className="h-8 w-8" aria-hidden />
+                      </div>
                     </div>
-                    <div className="rounded-full bg-[#2563EB] p-4">
-                      <svg
-                        className="h-8 w-8 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                        />
-                      </svg>
-                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Empty Categories (if any) */}
+          {emptyCategories.length > 0 && (
+            <section className="pt-12 border-t border-slate-200/80">
+              <h2 className="font-display text-xl font-bold text-slate-700 mb-4 flex items-center gap-2">
+                <span className="h-1 w-6 rounded-full bg-slate-300" />
+                Empty Categories
+              </h2>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {emptyCategories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="rounded-xl border border-dashed border-slate-200 bg-white/60 p-4 opacity-75"
+                  >
+                    <h3 className="text-sm font-medium text-slate-600">{category.name}</h3>
+                    <p className="mt-1 text-xs text-slate-400">No articles yet</p>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
       </main>
       <Footer />
     </div>
