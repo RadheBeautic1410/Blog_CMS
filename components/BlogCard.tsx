@@ -37,7 +37,7 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#2563EB] to-[#1D4ED8]">
+            <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#F97316] to-[#EA580C]">
               <svg
                 className="h-16 w-16 text-white opacity-50"
                 fill="none"
@@ -62,7 +62,7 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
         <div className="mb-3">
           <Link
             href={`/categories/${blog.category.toLowerCase().replace(/\s+/g, "-")}`}
-            className="inline-flex items-center rounded-full bg-[#2563EB]/10 px-3 py-1 text-xs font-medium text-[#2563EB] hover:bg-[#2563EB]/20 transition-colors"
+            className="inline-flex items-center rounded-full bg-[#FDBA74]/30 px-3 py-1 text-xs font-medium text-[#F97316] hover:bg-[#FDBA74]/40 transition-colors"
           >
             {blog.category}
           </Link>
@@ -70,18 +70,18 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
 
         {/* Title */}
         <Link href={`/blogs/${blog.slug}`}>
-          <h3 className="mb-2 text-xl font-semibold text-[#111827] line-clamp-2 group-hover:text-[#2563EB] transition-colors cursor-pointer">
+          <h3 className="mb-2 text-xl font-semibold text-[#1F2937] line-clamp-2 group-hover:text-[#F97316] transition-colors cursor-pointer">
             {blog.title}
           </h3>
         </Link>
 
         {/* Excerpt */}
-        <p className="mb-4 flex-1 text-sm leading-6 text-gray-600 line-clamp-2">
+        <p className="mb-4 flex-1 text-sm leading-6 text-[#6B7280] line-clamp-2">
           {blog.excerpt}
         </p>
 
         {/* Meta Info */}
-        <div className="mt-auto flex items-center justify-between text-xs text-gray-500">
+        <div className="mt-auto flex items-center justify-between text-xs text-[#6B7280]">
           <div className="flex items-center space-x-4">
             <span className="flex items-center">
               <svg
@@ -126,7 +126,7 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
         <div className="mt-4">
           <Link
             href={`/blogs/${blog.slug}`}
-            className="text-sm font-medium text-[#2563EB] hover:text-[#1D4ED8] transition-colors inline-flex items-center"
+            className="text-sm font-medium text-[#F97316] hover:text-[#EA580C] transition-colors inline-flex items-center"
           >
             Read More
             <svg

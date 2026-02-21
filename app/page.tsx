@@ -83,7 +83,7 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-[#FFF7ED]">
       <Navbar />
       <main>
         {/* Hero Section */}
@@ -93,10 +93,10 @@ export default async function Home() {
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight text-[#1F2937] sm:text-4xl">
                 Featured Posts
               </h2>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-4 text-lg text-[#6B7280]">
                 Handpicked articles you don't want to miss
               </p>
             </div>
@@ -107,7 +107,7 @@ export default async function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[#6B7280]">
                 <p>No featured posts available yet.</p>
               </div>
             )}
@@ -119,10 +119,10 @@ export default async function Home() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 flex items-center justify-between">
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+                <h2 className="text-3xl font-bold tracking-tight text-[#1F2937] sm:text-4xl">
                   Latest Articles
                 </h2>
-                <p className="mt-4 text-lg text-gray-600">
+                <p className="mt-4 text-lg text-[#6B7280]">
                   Stay updated with our newest content
                 </p>
               </div>
@@ -134,14 +134,14 @@ export default async function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[#6B7280]">
                 <p>No articles available yet.</p>
               </div>
             )}
             <div className="mt-12 text-center">
               <Link
                 href="/blogs"
-                className="inline-flex items-center rounded-lg bg-[#2563EB] px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors"
+                className="inline-flex items-center rounded-lg bg-[#F97316] px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-[#EA580C] transition-colors"
               >
                 View All Blogs
                 <svg
@@ -166,10 +166,10 @@ export default async function Home() {
         <section className="py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight text-[#1F2937] sm:text-4xl">
                 Browse by Category
               </h2>
-              <p className="mt-4 text-lg text-gray-600">
+              <p className="mt-4 text-lg text-[#6B7280]">
                 Explore articles by topic
               </p>
             </div>
@@ -185,7 +185,7 @@ export default async function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[#6B7280]">
                 <p>No categories available yet.</p>
               </div>
             )}

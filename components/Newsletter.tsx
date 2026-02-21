@@ -13,13 +13,13 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] py-16">
+    <section className="bg-gradient-to-r from-[#F97316] to-[#EA580C] py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Subscribe to our Newsletter
           </h2>
-          <p className="mt-4 text-lg leading-8 text-blue-100">
+          <p className="mt-4 text-lg leading-8 text-white/90">
             Get the latest articles, tutorials, and insights delivered straight
             to your inbox. No spam, unsubscribe anytime.
           </p>
@@ -31,11 +31,11 @@ export default function Newsletter() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-white sm:w-80"
+                className="w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-white/20 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-white sm:w-80"
               />
               <button
                 type="submit"
-                className="rounded-lg bg-white px-6 py-3 text-base font-semibold text-[#2563EB] shadow-sm hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="rounded-lg bg-white px-6 py-3 text-base font-semibold text-[#F97316] shadow-sm hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 Subscribe
               </button>

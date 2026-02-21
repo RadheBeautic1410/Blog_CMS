@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -13,6 +13,8 @@ export default function Navbar() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
   // Close search when clicking outside
   useEffect(() => {
@@ -81,12 +83,12 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
+    <header className={`sticky top-0 z-50 ${isHomePage ? 'bg-white/80 backdrop-blur-sm' : 'bg-white'} shadow-sm`}>
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-[#111827]">
+            <Link href="/" className={`text-2xl font-bold ${isHomePage ? 'text-[#1F2937]' : 'text-[#111827]'}`}>
               BlogHub
             </Link>
           </div>
@@ -96,31 +98,31 @@ export default function Navbar() {
             <div className="ml-10 flex items-baseline space-x-8">
               <Link
                 href="/"
-                className="text-[#111827] hover:text-[#2563EB] transition-colors font-medium"
+                className={`${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}
               >
                 Home
               </Link>
               <Link
                 href="/blogs"
-                className="text-[#111827] hover:text-[#2563EB] transition-colors font-medium"
+                className={`${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}
               >
                 Blogs
               </Link>
               <Link
                 href="/categories"
-                className="text-[#111827] hover:text-[#2563EB] transition-colors font-medium"
+                className={`${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="text-[#111827] hover:text-[#2563EB] transition-colors font-medium"
+                className={`${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}
               >
                 About
               </Link>
               <Link
                 href="/contact"
-                className="text-[#111827] hover:text-[#2563EB] transition-colors font-medium"
+                className={`${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}
               >
                 Contact
               </Link>
@@ -141,11 +143,11 @@ export default function Navbar() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search articles..."
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                        className={`flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 ${isHomePage ? 'focus:ring-[#F97316]' : 'focus:ring-[#2563EB]'}`}
                       />
                       <button
                         type="submit"
-                        className="p-2 text-[#2563EB] hover:bg-gray-100 rounded-md"
+                        className={`p-2 ${isHomePage ? 'text-[#F97316]' : 'text-[#2563EB]'} hover:bg-gray-100 rounded-md`}
                       >
                         <svg
                           className="h-5 w-5"
@@ -202,10 +204,10 @@ export default function Navbar() {
                               onClick={() => handleResultClick(result.slug)}
                               className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                             >
-                              <div className="font-medium text-[#111827] line-clamp-1">
+                              <div className={`font-medium ${isHomePage ? 'text-[#1F2937]' : 'text-[#111827]'} line-clamp-1`}>
                                 {result.title}
                               </div>
-                              <div className="text-sm text-gray-500 line-clamp-2 mt-1">
+                              <div className={`text-sm ${isHomePage ? 'text-[#6B7280]' : 'text-gray-500'} line-clamp-2 mt-1`}>
                                 {result.excerpt}
                               </div>
                             </button>
@@ -214,7 +216,7 @@ export default function Navbar() {
                             <div className="px-4 py-2 border-t border-gray-200">
                               <button
                                 onClick={handleSearchSubmit}
-                                className="text-sm text-[#2563EB] hover:underline w-full text-center"
+                                className={`text-sm ${isHomePage ? 'text-[#F97316]' : 'text-[#2563EB]'} hover:underline w-full text-center`}
                               >
                                 View all {searchResults.length} results
                               </button>
@@ -232,7 +234,7 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="p-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                  className={`p-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                   title="Search"
                 >
                   <svg
@@ -251,7 +253,7 @@ export default function Navbar() {
                 </button>
               )}
             </div>
-            <button className="px-4 py-2 text-[#111827] hover:text-[#2563EB] transition-colors font-medium">
+            <button className={`px-4 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}>
               Login
             </button>
           </div>
@@ -260,7 +262,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-[#111827]"
+              className={`p-2 ${isHomePage ? 'text-[#1F2937]' : 'text-[#111827]'}`}
             >
               <svg
                 className="h-6 w-6"
@@ -294,35 +296,35 @@ export default function Navbar() {
             <div className="space-y-1 px-2 pb-3 pt-2">
               <Link
                 href="/"
-                className="block px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                className={`block px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/blogs"
-                className="block px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                className={`block px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blogs
               </Link>
               <Link
                 href="/categories"
-                className="block px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                className={`block px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Categories
               </Link>
               <Link
                 href="/about"
-                className="block px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                className={`block px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="/contact"
-                className="block px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors"
+                className={`block px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -336,11 +338,11 @@ export default function Navbar() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search articles..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                        className={`flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 ${isHomePage ? 'focus:ring-[#F97316]' : 'focus:ring-[#2563EB]'}`}
                   />
                   <button
                     type="submit"
-                    className="p-2 text-[#2563EB] hover:bg-gray-100 rounded-md"
+                    className={`p-2 ${isHomePage ? 'text-[#F97316]' : 'text-[#2563EB]'} hover:bg-gray-100 rounded-md`}
                   >
                     <svg
                       className="h-5 w-5"
@@ -359,7 +361,7 @@ export default function Navbar() {
                 </form>
               </div>
               
-              <button className="block w-full text-left px-3 py-2 text-[#111827] hover:text-[#2563EB] transition-colors font-medium">
+              <button className={`block w-full text-left px-3 py-2 ${isHomePage ? 'text-[#1F2937] hover:text-[#F97316]' : 'text-[#111827] hover:text-[#2563EB]'} transition-colors font-medium`}>
                 Login
               </button>
             </div>
