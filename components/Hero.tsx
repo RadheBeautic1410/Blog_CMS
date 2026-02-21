@@ -1,50 +1,53 @@
 import Link from "next/link";
+import { FlowerIcon } from "@/components/icons";
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-br from-[#F9FAFB] to-[#E5E7EB] py-16 md:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center">
-          {/* Left Content */}
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-bold tracking-tight text-[#111827] sm:text-5xl md:text-6xl">
-              Discover Insights,{" "}
-              <span className="text-[#2563EB]">Tutorials & Ideas</span>
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-xl">
-              Explore our curated collection of articles covering technology,
-              business, programming, lifestyle, and more. Stay informed and
-              inspired.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6 md:justify-start">
-              <Link
-                href="/blogs"
-                className="rounded-lg bg-[#2563EB] px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
-              >
-                Explore Blogs
-              </Link>
-            </div>
-          </div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 py-24 md:py-32">
+      {/* Flower background - animated decorative flowers */}
+      <div className="pointer-events-none absolute inset-0 overflow-visible" style={{ zIndex: 0 }}>
+        <div className="flower-float absolute -left-20 top-1/3" style={{ animationDelay: "0s" }}>
+          <FlowerIcon className="h-100 w-100 fill-purple-300/65" aria-hidden />
+        </div>
+        <div className="flower-float absolute right-1/3 -bottom-30" style={{ animationDelay: "0.7s" }}>
+          <FlowerIcon className="h-70 w-70 fill-cyan-400/60" aria-hidden />
+        </div>
+        <div className="flower-float absolute right-8 top-2/3" style={{ animationDelay: "1.4s" }}>
+          <FlowerIcon className="h-36 w-36 fill-violet-300/65" aria-hidden />
+        </div>
+        <div className="flower-float absolute left-1/2 top-1 -translate-x-1/2" style={{ animationDelay: "2.1s" }}>
+          <FlowerIcon className="h-32 w-32 fill-pink-300/70" aria-hidden />
+        </div>
+      </div>
 
-          {/* Right Image/Illustration */}
-          <div className="relative hidden md:block">
-            <div className="relative h-96 w-full overflow-hidden rounded-lg bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] shadow-xl">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg
-                  className="h-64 w-64 text-white opacity-20"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-              </div>
-            </div>
+      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h1
+            className="font-display text-4xl font-bold tracking-tight text-[#0F172A] sm:text-5xl md:text-6xl lg:text-7xl leading-tight"
+          >
+            Discover Insights,{" "}
+            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent">
+              Tutorials & Ideas
+            </span>
+          </h1>
+          <p className="mt-8 text-lg leading-relaxed text-gray-600 sm:text-xl md:text-2xl max-w-2xl mx-auto">
+            Explore our curated collection of articles covering technology,
+            business, programming, lifestyle, and more. Stay informed and
+            inspired.
+          </p>
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/blogs"
+              className="rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 transform transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Explore Blogs
+            </Link>
+            <Link
+              href="/categories"
+              className="rounded-full border-2 border-indigo-600 px-8 py-4 text-lg font-semibold text-indigo-600 hover:bg-indigo-50 transition-all duration-200"
+            >
+              Browse Categories
+            </Link>
           </div>
         </div>
       </div>

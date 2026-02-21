@@ -22,23 +22,17 @@ export default function CategoryForm({ category }: CategoryFormProps) {
     name: category?.name || "",
     slug: category?.slug || "",
   });
-  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   // Auto-generate slug from name
   useEffect(() => {
-    if (formData.name && !slugManuallyEdited) {
+    if (!category) {
       const slug = formData.name
         .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
+        .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
-      if (slug && slug !== formData.slug) {
-        setFormData((prev) => ({ ...prev, slug }));
-      }
+      setFormData((prev) => ({ ...prev, slug }));
     }
-  }, [formData.name, slugManuallyEdited]);
+  }, [formData.name, category]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,10 +125,7 @@ export default function CategoryForm({ category }: CategoryFormProps) {
             id="slug"
             required
             value={formData.slug}
-            onChange={(e) => {
-              setSlugManuallyEdited(true);
-              setFormData({ ...formData, slug: e.target.value });
-            }}
+            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
             className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
             placeholder="technology"
           />
