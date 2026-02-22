@@ -23,7 +23,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#FAFBFC] text-slate-600">
+    <footer className="relative overflow-hidden text-slate-800">
       {/* Proper waves - animated wave divider at top */}
       <div className="relative w-full overflow-hidden">
         <div
@@ -118,7 +118,7 @@ export default function Footer() {
                   <a
                     key={item.label}
                     href={item.href}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-all duration-200 hover:bg-indigo-600 hover:text-white hover:scale-110"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition-all duration-200 hover:bg-indigo-500 hover:text-white hover:scale-110"
                     aria-label={item.label}
                   >
                     {item.icon === "twitter" && (
