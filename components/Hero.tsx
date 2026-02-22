@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Button from "@/components/ui/Button";
 import { FlowerIcon } from "@/components/icons";
 
 export default function Hero() {
@@ -36,18 +36,12 @@ export default function Hero() {
             inspired.
           </p>
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/blogs"
-              className="rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 hover:scale-105 transform transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            <Button href="/blogs" variant="primary" size="lg" className="hover:scale-105">
               Explore Blogs
-            </Link>
-            <Link
-              href="/categories"
-              className="rounded-full border-2 border-indigo-600 px-8 py-4 text-lg font-semibold text-indigo-600 hover:bg-indigo-50 transition-all duration-200"
-            >
+            </Button>
+            <Button href="/categories" variant="outline" size="lg">
               Browse Categories
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

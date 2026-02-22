@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -117,13 +118,15 @@ export default function AdminLoginPage() {
             </div>
 
             <div className="mt-6">
-              <button
+              <Button
                 type="submit"
                 disabled={loading}
-                className="flex w-full justify-center rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1D4ED8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                variant="primary"
+                size="lg"
+                className="w-full justify-center rounded-lg"
               >
                 {loading ? "Signing in..." : "Sign in"}
-              </button>
+              </Button>
             </div>
 
             <div className="mt-4 text-center">
