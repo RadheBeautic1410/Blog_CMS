@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -333,7 +334,7 @@ export default function Navbar() {
                     href={link.href}
                     className={`block px-4 py-2.5 rounded-xl font-medium transition-all ${
                       active
-                        ? "bg-indigo-600 text-white"
+                        ? "bg-gradient-to-r from-indigo-400 to-violet-500 text-white shadow-sm"
                         : "text-slate-700 hover:bg-indigo-50 hover:text-indigo-600"
                     }`}
                     onClick={() => setIsMenuOpen(false)}
@@ -374,9 +375,9 @@ export default function Navbar() {
                 </form>
               </div>
               
-              <Link href="/admin/login" className="block px-3 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-lg hover:shadow-lg transition-all font-semibold text-center mt-2">
+              <Button href="/admin/login" variant="primary" size="md" className="w-full mt-2 justify-center">
                 Admin Login
-              </Link>
+              </Button>
             </div>
           </div>
         )}

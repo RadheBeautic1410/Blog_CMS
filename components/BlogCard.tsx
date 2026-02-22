@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 import { FlowerIcon } from "@/components/icons";
 
 interface Blog {
@@ -174,15 +175,17 @@ export default function BlogCard({ blog, featured = false }: BlogCardProps) {
             <span className="text-slate-300">·</span>
             <span>{formatDate(blog.date)}</span>
           </div>
-          <Link
+          <Button
             href={`/blogs/${blog.slug}`}
-            className="inline-flex items-center gap-1 rounded-full bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-indigo-700 hover:gap-2"
+            variant="primary"
+            size="sm"
+            className="hover:gap-2"
           >
             Read
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </Link>
+          </Button>
         </div>
       </div>
     </article>
