@@ -4,8 +4,8 @@ import BlogCard from "@/components/BlogCard";
 import CategoryMarquee from "@/components/CategoryMarquee";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import Button from "@/components/ui/Button";
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import { FlowerIcon } from "@/components/icons";
 
 async function getFeaturedBlogs() {
@@ -91,7 +91,7 @@ export default async function Home() {
         <Hero />
 
         {/* Featured Blog Section */}
-        <section className="relative overflow-hidden py-5 lg:py-10">
+        <section id="featured" className="relative overflow-hidden py-5 lg:py-10">
           {/* Wavy decorative background */}
           <div
             className="pointer-events-none absolute -left-20 top-1/2 h-80 w-80 -translate-y-1/2 opacity-30"
@@ -177,10 +177,7 @@ export default async function Home() {
               </div>
             )}
             <div className="mt-14 text-center">
-              <Link
-                href="/blogs"
-                className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5"
-              >
+              <Button href="/blogs" variant="primary" size="lg">
                 View All Blogs
                 <svg
                   className="h-5 w-5"
@@ -195,7 +192,7 @@ export default async function Home() {
                     d="M17 8l4 4m0 0l-4 4m4-4H3"
                   />
                 </svg>
-              </Link>
+              </Button>
             </div>
           </div>
         </section>

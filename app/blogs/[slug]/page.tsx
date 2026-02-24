@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
+import Button from "@/components/ui/Button";
+import { FlowerIcon } from "@/components/icons";
 import type { Metadata } from "next";
 
 async function getBlog(slug: string) {
@@ -110,115 +112,117 @@ export default async function BlogDetailPage({
     getRelatedBlogs(blog.category, blog.slug),
   ]);
 
-  return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <Navbar />
-      <main>
-        {/* Hero Image */}
-        {blog.image && (
-          <div className="relative h-96 w-full overflow-hidden bg-gray-200">
-            <Image
-              src={blog.image}
-              alt={blog.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-          </div>
-        )}
+  const categorySlug = blog.category.toLowerCase().replace(/\s+/g, "-");
 
-        <article className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-          {/* Header */}
-          <header className="mb-8">
-            {/* Category Badge */}
-            <div className="mb-4">
-              <Link
-                href={`/categories/${blog.category.toLowerCase()}`}
-                className="inline-flex items-center rounded-full bg-[#2563EB]/10 px-4 py-2 text-sm font-medium text-[#2563EB] hover:bg-[#2563EB]/20 transition-colors"
-              >
-                {blog.category}
-              </Link>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-rose-50/60 via-white to-indigo-50/50 relative">
+      {/* Decorative flower background - scattered across the page */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
+        <FlowerIcon className="absolute -right-8 top-28 h-44 w-44 fill-indigo-300/65 -rotate-12" aria-hidden />
+        <FlowerIcon className="absolute -left-4 top-36 h-36 w-36 fill-violet-300/60 rotate-[15deg]" aria-hidden />
+        <FlowerIcon className="absolute right-[12%] top-[42%] h-32 w-32 fill-rose-300/55 rotate-[-8deg]" aria-hidden />
+        <FlowerIcon className="absolute left-[8%] top-[55%] h-40 w-40 fill-emerald-300/60 rotate-[20deg]" aria-hidden />
+        <FlowerIcon className="absolute -right-10 bottom-[30%] h-36 w-36 fill-amber-300/55 rotate-[-15deg]" aria-hidden />
+        <FlowerIcon className="absolute -left-6 bottom-[20%] h-32 w-32 fill-pink-300/60 rotate-[10deg]" aria-hidden />
+        <FlowerIcon className="absolute right-[22%] bottom-24 h-28 w-28 fill-indigo-300/50 rotate-[-5deg]" aria-hidden />
+      </div>
+      <Navbar />
+      <main className="relative overflow-hidden">
+        <article className="relative mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+          {/* Hero Image - Centered with shadow */}
+          {blog.image && (
+            <div className="mb-10 sm:mb-12 flex justify-center">
+              <div className="relative w-full h-[26rem] sm:h-[30rem] overflow-hidden rounded-2xl bg-slate-100 shadow-xl shadow-slate-300/40 ring-1 ring-slate-200/60 sm:rounded-3xl">
+                <Image
+                  src={blog.image}
+                  alt={blog.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 896px) 100vw, 896px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                  <Link
+                    href={`/categories/${categorySlug}`}
+                    className="inline-flex items-center rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-indigo-600 shadow-md ring-1 ring-white/50 backdrop-blur-sm hover:bg-white transition-colors"
+                  >
+                    {blog.category}
+                  </Link>
+                </div>
+              </div>
             </div>
+          )}
+          {/* Header */}
+          <header className="mb-10">
+            {!blog.image && (
+              <div className="mb-4">
+                <Link
+                  href={`/categories/${categorySlug}`}
+                  className="inline-flex items-center rounded-full bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 ring-1 ring-indigo-200/60 hover:bg-indigo-100 transition-colors"
+                >
+                  {blog.category}
+                </Link>
+              </div>
+            )}
 
             {/* Title */}
-            <h1 className="mb-4 text-4xl font-bold tracking-tight text-[#111827] sm:text-5xl">
+            <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl leading-tight">
               {blog.title}
             </h1>
 
             {/* Excerpt */}
-            <p className="mb-6 text-xl text-gray-600 leading-relaxed">
+            <p className="mt-5 text-xl text-slate-600 leading-relaxed">
               {blog.excerpt}
             </p>
 
             {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+            <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-slate-600">
               {/* Author */}
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 {author?.avatar ? (
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden">
+                  <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow">
                     <Image
                       src={author.avatar}
                       alt={author.name}
                       fill
                       className="object-cover"
-                      sizes="40px"
+                      sizes="44px"
                     />
                   </div>
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-[#2563EB]/10 flex items-center justify-center">
-                    <span className="text-[#2563EB] font-semibold text-sm">
-                      {blog.author.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white font-semibold shadow">
+                    {blog.author.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div>
-                  <p className="font-medium text-[#111827]">{blog.author}</p>
+                  <p className="font-semibold text-slate-900">{blog.author}</p>
                   {author?.bio && (
-                    <p className="text-xs text-gray-500">{author.bio}</p>
+                    <p className="text-xs text-slate-500">{author.bio}</p>
                   )}
                 </div>
               </div>
 
+              <span className="text-slate-300">•</span>
+
               {/* Date */}
-              <div className="flex items-center">
-                <svg
-                  className="mr-2 h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
+              <div className="flex items-center gap-2 text-slate-500">
+                <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <time dateTime={blog.date.toString()}>
-                  {format(new Date(blog.date), "MMMM dd, yyyy")}
+                  {format(new Date(blog.date), "MMMM d, yyyy")}
                 </time>
               </div>
 
-              {/* Reading Time Estimate */}
-              <div className="flex items-center">
-                <svg
-                  className="mr-2 h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+              <span className="text-slate-300">•</span>
+
+              {/* Reading Time */}
+              <div className="flex items-center gap-2 text-slate-500">
+                <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>
-                  {Math.ceil(blog.content.split(" ").length / 200)} min read
-                </span>
+                <span>{Math.ceil(blog.content.split(" ").length / 200)} min read</span>
               </div>
             </div>
 
@@ -229,7 +233,7 @@ export default async function BlogDetailPage({
                   <Link
                     key={tag}
                     href={`/tags/${tag.toLowerCase()}`}
-                    className="inline-flex items-center rounded-md bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+                    className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600 ring-1 ring-slate-200/60 hover:bg-indigo-50 hover:text-indigo-600 hover:ring-indigo-200 transition-colors"
                   >
                     #{tag}
                   </Link>
@@ -239,7 +243,7 @@ export default async function BlogDetailPage({
           </header>
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none">
+          <div className="prose prose-lg prose-slate max-w-none rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-200/50 sm:p-8 md:p-10">
             <div
               className="blog-content"
               dangerouslySetInnerHTML={{ __html: blog.content }}
@@ -248,10 +252,10 @@ export default async function BlogDetailPage({
 
           {/* Author Card */}
           {author && (
-            <div className="mt-12 rounded-lg border border-[#E5E7EB] bg-white p-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+            <div className="mt-12 rounded-2xl border-2 border-dashed border-indigo-200/70 bg-gradient-to-br from-indigo-50/80 to-violet-50/50 p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6">
                 {author.avatar ? (
-                  <div className="relative h-20 w-20 rounded-full overflow-hidden flex-shrink-0">
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl ring-2 ring-white shadow-md">
                     <Image
                       src={author.avatar}
                       alt={author.name}
@@ -261,24 +265,25 @@ export default async function BlogDetailPage({
                     />
                   </div>
                 ) : (
-                  <div className="h-20 w-20 rounded-full bg-[#2563EB]/10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-[#2563EB] font-semibold text-2xl">
-                      {author.name.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 text-2xl font-bold text-white shadow-md">
+                    {author.name.charAt(0).toUpperCase()}
                   </div>
                 )}
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-[#111827] mb-2">
-                    {author.name}
-                  </h3>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FlowerIcon className="h-5 w-5 fill-indigo-500/80" aria-hidden />
+                    <h3 className="font-display text-xl font-bold text-slate-900">
+                      Written by {author.name}
+                    </h3>
+                  </div>
                   {author.bio && (
-                    <p className="text-gray-600 mb-4">{author.bio}</p>
+                    <p className="text-slate-600 mb-4">{author.bio}</p>
                   )}
-                  <div className="flex flex-wrap items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                     {author.email && (
                       <a
                         href={`mailto:${author.email}`}
-                        className="text-sm text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                       >
                         {author.email}
                       </a>
@@ -288,7 +293,7 @@ export default async function BlogDetailPage({
                         href={author.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
                       >
                         Website
                       </a>
@@ -300,7 +305,7 @@ export default async function BlogDetailPage({
                             href={(author.socialLinks as any).twitter}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-[#2563EB] transition-colors"
+                            className="text-slate-400 hover:text-indigo-500 transition-colors"
                             aria-label="Twitter"
                           >
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -313,7 +318,7 @@ export default async function BlogDetailPage({
                             href={(author.socialLinks as any).linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-[#2563EB] transition-colors"
+                            className="text-slate-400 hover:text-indigo-500 transition-colors"
                             aria-label="LinkedIn"
                           >
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -326,7 +331,7 @@ export default async function BlogDetailPage({
                             href={(author.socialLinks as any).github}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-gray-400 hover:text-[#2563EB] transition-colors"
+                            className="text-slate-400 hover:text-indigo-500 transition-colors"
                             aria-label="GitHub"
                           >
                             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -345,15 +350,18 @@ export default async function BlogDetailPage({
           {/* Related Blogs */}
           {relatedBlogs.length > 0 && (
             <section className="mt-16">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold tracking-tight text-[#111827]">
-                  Related Articles
-                </h2>
-                <p className="mt-2 text-gray-600">
-                  More articles from {blog.category}
-                </p>
+              <div className="mb-8 flex items-center gap-3">
+                <span className="h-1 w-10 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
+                <div>
+                  <h2 className="font-display text-2xl font-bold text-slate-900">
+                    Related Articles
+                  </h2>
+                  <p className="mt-1 text-slate-600">
+                    More from {blog.category}
+                  </p>
+                </div>
               </div>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedBlogs.map((relatedBlog) => (
                   <BlogCard key={relatedBlog.id} blog={relatedBlog} />
                 ))}
@@ -362,46 +370,20 @@ export default async function BlogDetailPage({
           )}
 
           {/* Navigation */}
-          <div className="mt-12 flex items-center justify-between border-t border-[#E5E7EB] pt-8">
-            <Link
-              href="/blogs"
-              className="inline-flex items-center text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
-            >
-              <svg
-                className="mr-2 h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
+          <nav className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-200 pt-8">
+            <Button href="/blogs" variant="secondary" size="md">
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               Back to Blogs
-            </Link>
-            <Link
-              href="/"
-              className="inline-flex items-center text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
-            >
+            </Button>
+            <Button href="/" variant="primary" size="md">
               Go to Home
-              <svg
-                className="ml-2 h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
-            </Link>
-          </div>
+            </Button>
+          </nav>
         </article>
       </main>
       <Footer />

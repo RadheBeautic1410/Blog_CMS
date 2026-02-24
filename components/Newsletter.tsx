@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FlowerIcon } from "@/components/icons";
+import Button from "@/components/ui/Button";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -47,12 +48,14 @@ export default function Newsletter() {
                   required
                   className="w-full rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:max-w-md"
                 />
-                <button
+                <Button
                   type="submit"
-                  className="rounded-full bg-indigo-600 px-8 py-4 text-base font-bold text-white shadow-lg transition-all duration-200 hover:bg-indigo-700 hover:scale-105 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  variant="primary"
+                  size="lg"
+                  className="px-8 py-4 hover:scale-105"
                 >
                   Subscribe
-                </button>
+                </Button>
               </div>
             </form>
             <p className="mt-6 text-sm text-slate-500">
