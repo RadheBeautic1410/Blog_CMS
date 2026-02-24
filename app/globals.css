@@ -1,23 +1,60 @@
+@import url("https://fonts.cdnfonts.com/css/recoleta");
 @import "tailwindcss";
 
 :root {
-  --background: #F9FAFB;
-  --foreground: #111827;
-  --primary: #2563EB;
+  --background: #FAFBFC;
+  --foreground: #0F172A;
+  --primary: #6366F1;
+  --primary-dark: #4F46E5;
+  --primary-light: #818CF8;
+  --secondary: #FF6B6B;
+  --accent: #06B6D4;
   --card: #FFFFFF;
-  --border: #E5E7EB;
+  --border: #E2E8F0;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-lexend), system-ui, -apple-system, sans-serif;
+  --font-heading: "Recoleta", Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-lexend), system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.3px;
+}
+
+/* Headings - Recoleta only */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Recoleta", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2.5rem;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.875rem;
+  line-height: 1.4;
+}
+
+.font-display,
+.font-heading {
+  font-family: "Recoleta", Georgia, serif;
 }
 
 /* Line clamp utilities */
@@ -110,17 +147,22 @@ body {
 }
 
 .rich-text-editor [contenteditable] a {
-  color: #2563EB;
+  color: var(--primary);
   text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.rich-text-editor [contenteditable] a:hover {
+  color: var(--primary-dark);
 }
 
 .rich-text-editor [contenteditable] blockquote {
   margin: 10px 0;
   padding: 10px 20px;
-  border-left: 4px solid #2563EB;
-  background-color: #F9FAFB;
+  border-left: 4px solid var(--primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
   font-style: italic;
-  color: #374151;
+  color: #475569;
 }
 
 .rich-text-editor [contenteditable] table {
@@ -142,59 +184,36 @@ body {
   font-weight: 600;
 }
 
-.rich-text-editor [contenteditable] code {
-  background-color: #F3F4F6;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  font-family: 'Courier New', Courier, monospace;
-  color: #111827;
-}
-
-.rich-text-editor [contenteditable] pre {
-  background-color: #111827;
-  color: #F9FAFB;
-  padding: 16px;
-  border-radius: 8px;
-  overflow-x: auto;
-  margin: 16px 0;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
-.rich-text-editor [contenteditable] pre code {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  color: inherit;
-  font-size: inherit;
-}
-
 /* Blog Content Styles */
 .blog-content {
-  @apply text-gray-700 leading-relaxed;
+  @apply text-slate-700 leading-8;
+  font-family: var(--font-lexend), system-ui, -apple-system, sans-serif;
 }
 
 .blog-content h2 {
-  @apply text-3xl font-bold text-[#111827] mt-8 mb-4;
+  @apply text-4xl font-bold text-slate-900 mt-10 mb-6;
+  font-family: "Recoleta", Georgia, serif;
+  letter-spacing: -0.5px;
 }
 
 .blog-content h3 {
-  @apply text-2xl font-semibold text-[#111827] mt-6 mb-3;
+  @apply text-3xl font-semibold text-slate-900 mt-8 mb-4;
+  font-family: "Recoleta", Georgia, serif;
+  letter-spacing: -0.3px;
 }
 
 .blog-content h4 {
-  @apply text-xl font-semibold text-[#111827] mt-4 mb-2;
+  @apply text-2xl font-semibold text-slate-900 mt-6 mb-3;
+  font-family: "Recoleta", Georgia, serif;
 }
 
 .blog-content p {
-  @apply mb-4;
+  @apply mb-5 text-slate-700 leading-8;
 }
 
 .blog-content ul,
 .blog-content ol {
-  @apply mb-4 ml-6;
+  @apply mb-5 ml-8;
 }
 
 .blog-content ul {
@@ -206,42 +225,124 @@ body {
 }
 
 .blog-content li {
-  @apply mb-2;
+  @apply mb-2 text-slate-700;
 }
 
 .blog-content a {
-  @apply text-[#2563EB] hover:text-[#1D4ED8] underline;
+  @apply text-indigo-600 hover:text-indigo-700 underline transition-colors;
 }
 
 .blog-content blockquote {
-  @apply border-l-4 border-[#2563EB] pl-4 italic my-4 text-gray-600;
+  @apply border-l-4 pl-5 italic my-6 text-slate-600 py-2 px-4 rounded;
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
 }
 
 .blog-content code {
-  @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+  @apply bg-slate-100 px-3 py-1 rounded text-sm font-mono text-slate-900;
 }
 
 .blog-content pre {
-  @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4;
+  @apply bg-slate-900 text-slate-100 p-5 rounded-lg overflow-x-auto mb-5 border border-slate-700;
 }
 
 .blog-content pre code {
-  @apply bg-transparent p-0 text-gray-100;
+  @apply bg-transparent p-0 text-slate-100;
 }
 
 .blog-content img {
-  @apply rounded-lg my-6 max-w-full h-auto;
+  @apply rounded-xl my-8 max-w-full h-auto shadow-lg hover:shadow-2xl transition-shadow;
 }
 
 .blog-content table {
-  @apply w-full border-collapse mb-4;
+  @apply w-full border-collapse mb-5 rounded-lg overflow-hidden border border-slate-300;
 }
 
 .blog-content th,
 .blog-content td {
-  @apply border border-gray-300 px-4 py-2;
+  @apply border border-slate-300 px-5 py-3;
 }
 
 .blog-content th {
-  @apply bg-gray-100 font-semibold;
+  @apply font-semibold text-white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+/* Category marquee animations */
+@keyframes marquee-ltr {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.marquee-track {
+  animation-duration: 20s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.marquee-ltr {
+  animation-name: marquee-ltr;
+}
+
+.marquee-rtl {
+  animation-name: marquee-rtl;
+}
+
+/* Footer wave animation - smooth horizontal drift */
+@keyframes wave-drift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.wave-animate {
+  animation: wave-drift 18s linear infinite;
+}
+
+/* Hero flower float animation - visible float + gentle rotate */
+@keyframes flower-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) rotate(4deg) scale(1.05);
+  }
+}
+
+.flower-float {
+  animation: flower-float 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Featured Posts - flower rotate in circle (around center) */
+@keyframes flower-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.flower-spin {
+  animation: flower-spin 6s linear infinite;
+  transform-origin: 50% 50%;
+  display: inline-block;
 }

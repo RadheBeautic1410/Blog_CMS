@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Lexend } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const lexend = Lexend({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-lexend",
   display: "swap",
 });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${lexend.variable} font-sans antialiased`}
       >
         {children}
       </body>
