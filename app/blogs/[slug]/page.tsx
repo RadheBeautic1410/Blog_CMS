@@ -171,40 +171,15 @@ export default async function BlogDetailPage({
               {blog.title}
             </h1>
 
-            {/* Excerpt */}
-            <p className="mt-5 text-xl text-slate-600 leading-relaxed">
-              {blog.excerpt}
-            </p>
+            {/* Excerpt (only when set) */}
+            {blog.excerpt?.trim() && (
+              <p className="mt-5 text-xl text-slate-600 leading-relaxed">
+                {blog.excerpt}
+              </p>
+            )}
 
             {/* Meta Information */}
             <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-slate-600">
-              {/* Author */}
-              <div className="flex items-center gap-3">
-                {author?.avatar ? (
-                  <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow">
-                    <Image
-                      src={author.avatar}
-                      alt={author.name}
-                      fill
-                      className="object-cover"
-                      sizes="44px"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-white font-semibold shadow">
-                    {blog.author.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div>
-                  <p className="font-semibold text-slate-900">{blog.author}</p>
-                  {author?.bio && (
-                    <p className="text-xs text-slate-500">{author.bio}</p>
-                  )}
-                </div>
-              </div>
-
-              <span className="text-slate-300">•</span>
-
               {/* Date */}
               <div className="flex items-center gap-2 text-slate-500">
                 <svg className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

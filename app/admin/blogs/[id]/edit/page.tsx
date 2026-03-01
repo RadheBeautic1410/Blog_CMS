@@ -1,4 +1,5 @@
 import BlogForm from "@/components/admin/BlogForm";
+import BlogHeaderActions from "@/components/admin/BlogHeaderActions";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
@@ -75,9 +76,14 @@ export default async function EditBlogPage({
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#111827]">Edit Blog</h1>
-        <p className="mt-2 text-gray-600">Update your blog post</p>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-[#111827]">Edit Blog</h1>
+          <p className="mt-2 text-gray-600">Update your blog post</p>
+        </div>
+        <div className="flex items-center shrink-0">
+          <BlogHeaderActions isEdit />
+        </div>
       </div>
       <BlogForm blog={blog} categories={categories} authors={authors} />
     </div>
