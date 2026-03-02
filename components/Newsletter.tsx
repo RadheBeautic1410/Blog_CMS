@@ -6,11 +6,32 @@ import Button from "@/components/ui/Button";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Subscribing with email:", email);
-    setEmail("");
+    setStatus("loading");
+    setMessage("");
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setStatus("error");
+        setMessage(data.error || "Something went wrong.");
+        return;
+      }
+      setStatus("success");
+      setMessage(data.message || "Thanks for subscribing!");
+      setEmail("");
+    } catch {
+      setStatus("error");
+      setMessage("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -46,17 +67,24 @@ export default function Newsletter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none sm:max-w-md"
+                  disabled={status === "loading"}
+                  className="w-full rounded-full border border-slate-200 bg-slate-50 px-6 py-4 text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none disabled:opacity-70 sm:max-w-md"
                 />
                 <Button
                   type="submit"
                   variant="primary"
                   size="lg"
-                  className="px-8 py-4 hover:scale-105"
+                  className="px-8 py-4 hover:scale-105 disabled:opacity-70 disabled:pointer-events-none"
+                  disabled={status === "loading"}
                 >
-                  Subscribe
+                  {status === "loading" ? "Subscribing…" : "Subscribe"}
                 </Button>
               </div>
+              {message && (
+                <p className={`mt-4 text-sm ${status === "error" ? "text-red-600" : "text-green-600"}`}>
+                  {message}
+                </p>
+              )}
             </form>
             <p className="mt-6 text-sm text-slate-500">
               Join 10,000+ readers. We respect your privacy.

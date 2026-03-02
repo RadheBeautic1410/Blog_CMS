@@ -123,11 +123,12 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
     } catch (err: any) {
       setError(err.message || "An error occurred");
       setLoading(false);
+      window.dispatchEvent(new Event("blog-form-complete"));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form id="blog-form" onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
@@ -152,33 +153,138 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
       )}
 
       <div className="rounded-lg bg-white border border-[#E5E7EB] p-6 space-y-6">
-        {/* Title */}
-        <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-[#111827] mb-2"
-          >
-            Title *
-          </label>
-          <input
-            type="text"
-            id="title"
-            required
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            placeholder="Enter blog title"
-          />
+        {/* Top row: Left = Title + Short Description, Right = Category + Author + Status */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-[#111827] mb-2">Title *</label>
+              <input
+                type="text"
+                id="title"
+                required
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+                placeholder="Enter blog title"
+              />
+            </div>
+            <div>
+              <label htmlFor="excerpt" className="block text-sm font-medium text-[#111827] mb-2">
+                Short Description <span className="text-gray-400 font-normal">(optional)</span>
+              </label>
+              <textarea
+                id="excerpt"
+                rows={5}
+                value={formData.excerpt}
+                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+                placeholder="Brief description of the blog post (optional)"
+              />
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-[#111827] mb-2">Category *</label>
+              <select
+                id="category"
+                required
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+              >
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="authorId" className="block text-sm font-medium text-[#111827] mb-2">Author *</label>
+              <select
+                id="authorId"
+                required
+                value={formData.authorId}
+                onChange={(e) => setFormData({ ...formData, authorId: e.target.value })}
+                className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+              >
+                {authors.length === 0 ? (
+                  <option value="">No authors available</option>
+                ) : (
+                  <>
+                    {blog?.authorId && !authors.some(a => a.id === blog.authorId) && (
+                      <option value={blog.authorId} disabled>Author (Not Found)</option>
+                    )}
+                    {authors.map((author) => (
+                      <option key={author.id} value={author.id}>{author.name}</option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="status" className="block text-sm font-medium text-[#111827] mb-2">Status *</label>
+              <select
+                id="status"
+                required
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+              >
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
         </div>
+
+        {/* Meta Title & Meta Description - at top */}
+        <div className="grid grid-cols-1 gap-6">
+          <div>
+            <label htmlFor="metaTitle" className="block text-sm font-medium text-[#111827] mb-2">Meta Title</label>
+            <input
+              type="text"
+              id="metaTitle"
+              value={formData.metaTitle}
+              onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+              className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+              placeholder="SEO meta title"
+            />
+          </div>
+          <div>
+            <label htmlFor="metaDescription" className="block text-sm font-medium text-[#111827] mb-2">Meta Description</label>
+            <textarea
+              id="metaDescription"
+              rows={2}
+              value={formData.metaDescription}
+              onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+              className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
+              placeholder="SEO meta description"
+            />
+          </div>
+        </div>
+
+        {/* Action buttons - at top (hidden on edit page; buttons are in page header) */}
+        {!blog && (
+          <div className="flex items-center justify-end gap-4 pb-2 border-b border-[#E5E7EB]">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="rounded-lg border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-semibold text-[#111827] shadow-sm hover:bg-[#F9FAFB] transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Saving..." : "Create Blog"}
+            </button>
+          </div>
+        )}
 
         {/* Slug */}
         <div>
-          <label
-            htmlFor="slug"
-            className="block text-sm font-medium text-[#111827] mb-2"
-          >
-            Slug *
-          </label>
+          <label htmlFor="slug" className="block text-sm font-medium text-[#111827] mb-2">Slug *</label>
           <input
             type="text"
             id="slug"
@@ -188,35 +294,12 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
             className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
             placeholder="blog-post-slug"
           />
-          <p className="mt-1 text-xs text-gray-500">
-            Auto-generated from title. You can edit it manually.
-          </p>
+          <p className="mt-1 text-xs text-gray-500">Auto-generated from title. You can edit it manually.</p>
         </div>
 
-        {/* Short Description */}
+        {/* Content - toolbar sticky, content scrolls */}
         <div>
-          <label
-            htmlFor="excerpt"
-            className="block text-sm font-medium text-[#111827] mb-2"
-          >
-            Short Description *
-          </label>
-          <textarea
-            id="excerpt"
-            required
-            rows={3}
-            value={formData.excerpt}
-            onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-            className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            placeholder="Brief description of the blog post"
-          />
-        </div>
-
-        {/* Content */}
-        <div>
-          <label className="block text-sm font-medium text-[#111827] mb-2">
-            Content *
-          </label>
+          <label className="block text-sm font-medium text-[#111827] mb-2">Content *</label>
           <RichTextEditor
             value={formData.content}
             onChange={(value) => setFormData({ ...formData, content: value })}
@@ -225,97 +308,15 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
 
         {/* Featured Image */}
         <div>
-          <label className="block text-sm font-medium text-[#111827] mb-2">
-            Featured Image *
-          </label>
+          <label className="block text-sm font-medium text-[#111827] mb-2">Featured Image *</label>
           <ImageUpload
             value={formData.image}
             onChange={(url) => setFormData({ ...formData, image: url })}
             folder="blogs"
           />
           {!formData.image && (
-            <p className="mt-1 text-xs text-red-500">
-              Please upload an image or enter an image URL
-            </p>
+            <p className="mt-1 text-xs text-red-500">Please upload an image or enter an image URL</p>
           )}
-        </div>
-
-        {/* Category, Author, and Status */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-[#111827] mb-2"
-            >
-              Category *
-            </label>
-            <select
-              id="category"
-              required
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            >
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="authorId"
-              className="block text-sm font-medium text-[#111827] mb-2"
-            >
-              Author *
-            </label>
-            <select
-              id="authorId"
-              required
-              value={formData.authorId}
-              onChange={(e) => setFormData({ ...formData, authorId: e.target.value })}
-              className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            >
-              {authors.length === 0 ? (
-                <option value="">No authors available</option>
-              ) : (
-                <>
-                  {/* Show current author even if not in list (might have been deleted) */}
-                  {blog?.authorId && !authors.some(a => a.id === blog.authorId) && (
-                    <option value={blog.authorId} disabled>
-                      Author (Not Found)
-                    </option>
-                  )}
-                  {authors.map((author) => (
-                    <option key={author.id} value={author.id}>
-                      {author.name}
-                    </option>
-                  ))}
-                </>
-              )}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-[#111827] mb-2"
-            >
-              Status *
-            </label>
-            <select
-              id="status"
-              required
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
         </div>
 
         {/* Tags */}
@@ -338,62 +339,6 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
             Separate tags with commas
           </p>
         </div>
-
-        {/* Meta Title */}
-        <div>
-          <label
-            htmlFor="metaTitle"
-            className="block text-sm font-medium text-[#111827] mb-2"
-          >
-            Meta Title
-          </label>
-          <input
-            type="text"
-            id="metaTitle"
-            value={formData.metaTitle}
-            onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
-            className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            placeholder="SEO meta title"
-          />
-        </div>
-
-        {/* Meta Description */}
-        <div>
-          <label
-            htmlFor="metaDescription"
-            className="block text-sm font-medium text-[#111827] mb-2"
-          >
-            Meta Description
-          </label>
-          <textarea
-            id="metaDescription"
-            rows={3}
-            value={formData.metaDescription}
-            onChange={(e) =>
-              setFormData({ ...formData, metaDescription: e.target.value })
-            }
-            className="w-full rounded-md border border-[#E5E7EB] px-3 py-2 text-[#111827] focus:border-[#2563EB] focus:outline-none focus:ring-[#2563EB]"
-            placeholder="SEO meta description"
-          />
-        </div>
-      </div>
-
-      {/* Submit Buttons */}
-      <div className="flex items-center justify-end space-x-4">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="rounded-lg border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-semibold text-[#111827] shadow-sm hover:bg-[#F9FAFB] transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? "Saving..." : blog ? "Update Blog" : "Create Blog"}
-        </button>
       </div>
     </form>
   );

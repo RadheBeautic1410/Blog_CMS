@@ -28,8 +28,8 @@ export async function PUT(
       metaDescription,
     } = body;
 
-    // Validate required fields
-    if (!title || !slug || !excerpt || !content || !category || !image || !authorId) {
+    // Validate required fields (excerpt is optional)
+    if (!title || !slug || !content || !category || !image || !authorId) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -65,11 +65,11 @@ export async function PUT(
       data: {
         title,
         slug,
-        excerpt,
+        excerpt: excerpt ?? "",
         content,
         category,
         image,
-        tags: tags || [],
+        tags: (tags || []).map((t: string) => String(t).trim().toLowerCase()).filter(Boolean),
         status: status || "draft",
         metaTitle: metaTitle || null,
         metaDescription: metaDescription || null,

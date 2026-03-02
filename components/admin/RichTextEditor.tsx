@@ -953,9 +953,9 @@ export default function RichTextEditor({
   };
 
   return (
-    <div className="rich-text-editor border border-[#E5E7EB] rounded-md overflow-hidden bg-white">
-      {/* Toolbar */}
-      <div className="bg-[#F9FAFB] border-b border-[#E5E7EB]">
+    <div className="rich-text-editor border border-[#E5E7EB] rounded-md overflow-hidden bg-white flex flex-col max-h-[90vh]">
+      {/* Toolbar - sticky so it stays visible while content scrolls */}
+      <div className="sticky top-0 z-10 bg-[#F9FAFB] border-b border-[#E5E7EB] shrink-0">
         {/* First Row */}
         <div className="flex items-center gap-1 p-2 flex-wrap border-b border-[#E5E7EB]">
           {/* Undo/Redo */}
@@ -1600,28 +1600,30 @@ export default function RichTextEditor({
         </div>
       </div>
 
-      {/* Editor */}
-      {htmlMode ? (
-        <textarea
-          value={htmlContent}
-          onChange={handleHtmlChange}
-          className="w-full min-h-[300px] p-4 border-0 focus:outline-none font-mono text-sm"
-          placeholder="HTML code..."
-        />
-      ) : (
-        <div
-          ref={editorRef}
-          contentEditable
-          onInput={handleInput}
-          className="min-h-[300px] p-4 focus:outline-none"
-          style={{
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-          }}
-          data-placeholder={placeholder}
-          suppressContentEditableWarning
-        />
-      )}
+      {/* Editor - scrollable content area */}
+      <div className="flex-1 min-h-0 overflow-auto">
+        {htmlMode ? (
+          <textarea
+            value={htmlContent}
+            onChange={handleHtmlChange}
+            className="w-full min-h-[300px] p-4 border-0 focus:outline-none font-mono text-sm"
+            placeholder="HTML code..."
+          />
+        ) : (
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={handleInput}
+            className="min-h-[300px] p-4 focus:outline-none"
+            style={{
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+            data-placeholder={placeholder}
+            suppressContentEditableWarning
+          />
+        )}
+      </div>
 
       {/* Placeholder styling */}
       <style jsx>{`

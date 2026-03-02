@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -278,12 +277,6 @@ export default function Navbar() {
                 </button>
               )}
             </div>
-            <Link
-              href="/admin/login"
-              className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-full hover:shadow-lg hover:shadow-indigo-500/30 transition-all duration-200 font-semibold text-sm"
-            >
-              Admin
-            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -374,10 +367,6 @@ export default function Navbar() {
                   </button>
                 </form>
               </div>
-              
-              <Button href="/admin/login" variant="primary" size="md" className="w-full mt-2 justify-center">
-                Admin Login
-              </Button>
             </div>
           </div>
         )}
