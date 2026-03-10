@@ -114,13 +114,8 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className={`font-display text-2xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent transition-opacity hover:opacity-90 ${
-                !isScrolled ? "drop-shadow-sm" : ""
-              }`}
-            >
-              BlogHub
+            <Link href="/">
+              <img src="/logo.png" alt="Logo" className="h-44 w-auto" />
             </Link>
           </div>
 

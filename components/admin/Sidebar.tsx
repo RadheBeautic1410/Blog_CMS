@@ -16,7 +16,12 @@ const menuItems: MenuItem[] = [
     name: "Dashboard",
     href: "/admin",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -30,7 +35,12 @@ const menuItems: MenuItem[] = [
     name: "Blogs",
     href: "/admin/blogs",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -44,7 +54,12 @@ const menuItems: MenuItem[] = [
     name: "Categories",
     href: "/admin/categories",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -58,7 +73,12 @@ const menuItems: MenuItem[] = [
     name: "Authors",
     href: "/admin/authors",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -72,7 +92,12 @@ const menuItems: MenuItem[] = [
     name: "Media Library",
     href: "/admin/media",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -86,7 +111,12 @@ const menuItems: MenuItem[] = [
     name: "Newsletter",
     href: "/admin/newsletter",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -100,7 +130,12 @@ const menuItems: MenuItem[] = [
     name: "Users",
     href: "/admin/users",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -114,7 +149,12 @@ const menuItems: MenuItem[] = [
     name: "Settings",
     href: "/admin/settings",
     icon: (
-      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -181,44 +221,43 @@ export default function Sidebar() {
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
-      <div className="flex h-full flex-col">
-        {/* Logo/Brand */}
-        <div className="flex h-16 items-center border-b border-[#E5E7EB] px-6">
-          <Link href="/admin" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-[#2563EB] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">B</span>
-            </div>
-            <span className="text-xl font-bold text-[#111827]">BlogHub</span>
-          </Link>
-        </div>
+        <div className="flex h-full flex-col">
+          {/* Logo/Brand */}
+          <div className="flex h-16 items-center border-b border-[#E5E7EB] px-6">
+            <Link href="/">
+              <img src="/logo.png" alt="Logo" className="h-44 w-auto" />
+            </Link>
+          </div>
 
-        {/* Navigation Menu */}
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/admin" && pathname?.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-[#2563EB] text-white"
-                    : "text-[#111827] hover:bg-[#F9FAFB] hover:text-[#2563EB]"
-                }`}
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
+          {/* Navigation Menu */}
+          <nav className="flex-1 space-y-1 px-3 py-4">
+            {menuItems.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/admin" && pathname?.startsWith(item.href));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center space-x-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[#2563EB] text-white"
+                      : "text-[#111827] hover:bg-[#F9FAFB] hover:text-[#2563EB]"
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Logout Button */}
-        <div className="border-t border-[#E5E7EB] p-4">
-          <LogoutButton />
+          {/* Logout Button */}
+          <div className="border-t border-[#E5E7EB] p-4">
+            <LogoutButton />
+          </div>
         </div>
-      </div>
       </aside>
     </>
   );
