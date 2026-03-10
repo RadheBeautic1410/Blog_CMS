@@ -103,10 +103,8 @@ export default function Footer() {
           <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
             {/* Brand */}
             <div className="md:col-span-2">
-              <Link href="/" className="font-display text-3xl font-bold">
-                <span className="bg-gradient-to-r from-violet-500 via-indigo-500 to-sky-500 bg-clip-text text-transparent">
-                  BlogHub
-                </span>
+              <Link href="/">
+                <img src="/logo.png" alt="Logo" className="h-44 w-auto" />
               </Link>
               <p className="mt-5 max-w-md text-sm leading-relaxed text-slate-500">
                 Your go-to destination for insightful articles, tutorials, and
