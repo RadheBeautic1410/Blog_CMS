@@ -18,8 +18,8 @@ const contactMethods = [
       </svg>
     ),
     label: "Email",
-    value: "hello@example.com",
-    href: "mailto:hello@example.com",
+    value: "info@factiso.com",
+    href: "mailto:info@factiso.com",
     gradient: "from-indigo-400 to-violet-500",
     ring: "ring-indigo-200/60",
   },
