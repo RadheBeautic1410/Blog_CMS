@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+Disallow: /account
+
+Disallow: /js/
+Disallow: /js/*
+
+Disallow: /_next/
+Disallow: /_next/*
+
+Disallow: /feed
+Disallow: /*/feed
+Disallow: /*/*/feed
+Disallow: /*/*/*/feed
+
+Disallow: /apple-app-site-association
+
+Disallow: /app/
+Disallow: /app/*
+
+Sitemap: https://www.factiso.com/sitemap.xml
+Sitemap: https://www.factiso.com/blog/sitemap.xml
