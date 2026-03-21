@@ -25,11 +25,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   return [
-    {
-      url: `${NEXT_PUBLIC_URL}/blogs`,
-      lastModified: new Date(),
-      changeFrequency,
-    },
+    // {
+    //   url: `${NEXT_PUBLIC_URL}/blogs`,
+    //   lastModified: new Date(),
+    //   changeFrequency,
+    // },
     ...blogRoutes,
   ];
 }

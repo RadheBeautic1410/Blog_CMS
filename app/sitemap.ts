@@ -13,7 +13,7 @@ type ChangeFrequency =
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const changeFrequency: ChangeFrequency = "weekly";
 
-  const staticRoutes: MetadataRoute.Sitemap = ["/", "/blogs"].map((route) => ({
+  const staticRoutes: MetadataRoute.Sitemap = ["/page/sitemap.xml", "/blogs/sitemap.xml", "/categories/sitemap.xml"].map((route) => ({
     url: `${NEXT_PUBLIC_URL}${route}`,
     lastModified: new Date(),
     changeFrequency,

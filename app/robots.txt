@@ -21,3 +21,4 @@ Disallow: /app/*
 
 Sitemap: https://www.factiso.com/sitemap.xml
 Sitemap: https://www.factiso.com/blog/sitemap.xml
+Sitemap: https://www.factiso.com/categories/sitemap.xml
