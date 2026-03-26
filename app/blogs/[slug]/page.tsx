@@ -9,8 +9,11 @@ import BlogCard from "@/components/BlogCard";
 import Button from "@/components/ui/Button";
 import { FlowerIcon } from "@/components/icons";
 import type { Metadata } from "next";
+import BlogHtmlContent from "@/components/BlogHtmlContent";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getBlog(slug: string) {
+  noStore();
   try {
     const blog = await prisma.blog.findUnique({
       where: { slug },
@@ -100,6 +103,7 @@ export default async function BlogDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  noStore();
   const { slug } = await params;
   const blog = await getBlog(slug);
 
@@ -218,11 +222,8 @@ export default async function BlogDetailPage({
           </header>
 
           {/* Content */}
-          <div className="prose prose-lg prose-slate max-w-none rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-200/50 sm:p-8 md:p-10">
-            <div
-              className="blog-content"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            />
+          <div className="max-w-none rounded-2xl border border-slate-200/80 bg-white/90 p-6 shadow-lg shadow-slate-200/50 sm:p-8 md:p-10">
+            <BlogHtmlContent html={blog.content} />
           </div>
 
           {/* Author Card */}

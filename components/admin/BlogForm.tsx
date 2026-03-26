@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "./RichTextEditor";
 import ImageUpload from "./ImageUpload";
+import { normalizeBlogHtml } from "@/lib/normalizeBlogHtml";
 
 interface Category {
   id: string;
@@ -98,6 +99,7 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
 
       const payload = {
         ...formData,
+        content: normalizeBlogHtml(formData.content),
         tags: tagsArray,
       };
 

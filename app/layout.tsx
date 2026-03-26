@@ -9,8 +9,9 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Blog Home - Discover Insights, Tutorials & Ideas",
-  description: "Explore our collection of insightful articles, tutorials, and ideas on technology, business, programming, lifestyle, and more.",
+  title: "Factiso – Latest Facts, Guides & Trending Information",
+  description:
+    "Discover useful facts, guides, and trending information on technology, lifestyle, education, and more. Factiso brings easy-to-read blogs for everyone.",
 };
 
 export default function RootLayout({
@@ -20,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${lexend.variable} font-sans antialiased`}
-      >
+      <body className={`${lexend.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
