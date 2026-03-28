@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "./RichTextEditor";
 import ImageUpload from "./ImageUpload";
-import { normalizeBlogHtml } from "@/lib/normalizeBlogHtml";
+import { cleanBlogHtmlForStorage } from "@/lib/normalizeBlogHtml";
 
 interface Category {
   id: string;
@@ -99,7 +99,9 @@ export default function BlogForm({ blog, categories, authors }: BlogFormProps) {
 
       const payload = {
         ...formData,
-        content: normalizeBlogHtml(formData.content),
+        // Preserve editor formatting (including blank lines) in storage.
+        // Frontend rendering normalizes separately.
+        content: cleanBlogHtmlForStorage(formData.content),
         tags: tagsArray,
       };
 

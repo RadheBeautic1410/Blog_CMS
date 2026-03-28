@@ -194,8 +194,7 @@ h3 {
 .blog-content :is(h1, h2, h3, h4, h5, h6) {
   @apply text-slate-900;
   font-family: "Recoleta", Georgia, serif;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 1.25rem 0 0.35rem 0 !important;
+  margin: 1.25rem 0 0.35rem 0;
 }
 
 .blog-content > :first-child:is(h1, h2, h3, h4, h5, h6),
@@ -232,8 +231,7 @@ h3 {
 
 .blog-content p {
   @apply text-slate-700 leading-8;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 1.1rem 0;
 }
 
 .blog-content li > p {
@@ -262,34 +260,6 @@ h3 {
   margin-bottom: 0;
 }
 
-/* “Headings” saved as bold-only paragraphs (common from contenteditable editors). */
-.blog-content p:has(> strong:only-child),
-.blog-content p:has(> b:only-child),
-.blog-content p:has(> span:only-child[style*="font-weight: bolder"]),
-.blog-content p:has(> span:only-child[style*="font-weight:bolder"]),
-.blog-content p:has(> span:only-child[style*="font-weight: bold"]),
-.blog-content p:has(> span:only-child[style*="font-weight:bold"]),
-.blog-content p:has(> span:only-child[style*="font-weight: 700"]),
-.blog-content p:has(> span:only-child[style*="font-weight:700"]) {
-  font-family: "Recoleta", Georgia, serif;
-  font-weight: 700;
-  color: #0f172a; /* slate-900 */
-  font-size: 1.875rem; /* ~text-3xl */
-  line-height: 1.3;
-  /* Keep gaps closer to the editor (avoid stacked margins with surrounding <p>) */
-  margin: 0.85rem 0 0.35rem 0 !important;
-}
-
-/* Keep numbered “sub-headings” (e.g. "<p><b>1. ...</b></p>") a bit smaller. */
-.blog-content p:has(> b:only-child),
-.blog-content p:has(> strong:only-child):where(:has(> strong:only-child)) {
-  /* no-op placeholder to keep selector grouping stable */
-}
-.blog-content p:has(> b:only-child) {
-  font-size: 1.25rem; /* ~text-xl */
-  margin-top: 1rem !important;
-}
-
 /* Note: we intentionally do NOT style editor spacer paragraphs (<p><br></p>).
    They are removed by `normalizeBlogHtml()` so spacing is controlled by real paragraphs/headings. */
 
@@ -315,9 +285,10 @@ h3 {
 
 .blog-content ul,
 .blog-content ol {
-  @apply ml-8;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  /* Use padding for reliable bullet/number indentation across browsers */
+  margin: 0 0 1.1rem 0;
+  padding-left: 1.5rem;
+  list-style-position: outside;
 }
 
 .blog-content ul {
@@ -330,11 +301,14 @@ h3 {
 
 .blog-content li {
   @apply mb-2 text-slate-700;
+  /* Small text inset so long wrapped lines align nicely with bullets */
+  padding-left: 0.125rem;
 }
 
 .blog-content li > ul,
 .blog-content li > ol {
   @apply mt-2 mb-0;
+  padding-left: 1.25rem;
 }
 
 .blog-content a {
@@ -343,8 +317,7 @@ h3 {
 
 .blog-content blockquote {
   @apply border-l-4 pl-5 italic text-slate-600 py-2 px-4 rounded;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 1.1rem 0;
   border-color: var(--primary);
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
 }
@@ -355,8 +328,7 @@ h3 {
 
 .blog-content pre {
   @apply bg-slate-900 text-slate-100 p-5 rounded-lg overflow-x-auto border border-slate-700;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 1.1rem 0;
 }
 
 .blog-content pre code {
@@ -365,14 +337,12 @@ h3 {
 
 .blog-content img {
   @apply rounded-xl max-w-full h-auto shadow-lg hover:shadow-2xl transition-shadow;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 1.1rem 0;
 }
 
 .blog-content table {
   @apply w-full border-collapse rounded-lg overflow-hidden border border-slate-300;
-  /* Override editor inline styles like style="margin:0" */
-  margin: 0 0 1.25rem 0 !important;
+  margin: 0 0 1.1rem 0;
 }
 
 .blog-content th,
