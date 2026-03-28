@@ -1,8 +1,13 @@
 /**
- * Cleans rich-text HTML before persisting. Runs in the browser (BlogForm).
- * Flattens wrapper divs, fixes spacer paragraphs, splits merged title/body <p>, normalizes bold titles.
+ * Frontend render normalizer:
+ * - Flattens wrapper divs and converts leaf divs to paragraphs
+ * - Removes editor spacer paragraphs (<p><br></p>) so spacing is controlled by CSS
+ * - Promotes "bold title" paragraphs into semantic headings for consistent styling
+ * - Removes editor-only noise (selection classes, redundant inline letter-spacing)
+ *
+ * IMPORTANT: do NOT use this for editor storage (it will remove blank lines).
  */
-export function normalizeBlogHtml(rawHtml: string): string {
+export function normalizeBlogHtmlForRender(rawHtml: string): string {
   if (typeof document === "undefined") return rawHtml.trim();
   if (!rawHtml.trim()) return rawHtml;
 
@@ -18,9 +23,31 @@ export function normalizeBlogHtml(rawHtml: string): string {
   promoteBolderSpanTitles(root);
   splitBoldTitleBodyParagraphs(root);
   trimParagraphEdgeBreaks(root);
-  normalizeSpacerParagraphs(root);
+  removeSpacerParagraphs(root);
+  promoteBoldOnlyParagraphHeadings(root);
   stripRedundantInlineStyles(root);
   cleanupEmptyElements(root);
+
+  return root.innerHTML.trim();
+}
+
+/**
+ * Storage cleaner for the editor:
+ * keeps blank lines/spacers, but strips editor-only noise and redundant styles.
+ */
+export function cleanBlogHtmlForStorage(rawHtml: string): string {
+  if (typeof document === "undefined") return rawHtml.trim();
+  if (!rawHtml.trim()) return rawHtml;
+
+  const root = document.createElement("div");
+  root.innerHTML = rawHtml;
+
+  root.querySelectorAll(".isSelectedEnd").forEach((el) => {
+    el.classList.remove("isSelectedEnd");
+  });
+
+  // Keep editor structure/spacers intact; only strip noisy inline styles.
+  stripRedundantInlineStyles(root);
 
   return root.innerHTML.trim();
 }
@@ -164,7 +191,7 @@ function splitBoldTitleBodyParagraphs(root: HTMLElement) {
   });
 }
 
-function normalizeSpacerParagraphs(root: HTMLElement) {
+function removeSpacerParagraphs(root: HTMLElement) {
   root.querySelectorAll("p").forEach((p) => {
     if (p.querySelector("img")) return;
 
@@ -174,9 +201,32 @@ function normalizeSpacerParagraphs(root: HTMLElement) {
     const hasBr = p.querySelector("br");
     if (!hasBr && p.children.length > 0) return;
 
-    // Editors represent blank lines as <p><br></p>. We do NOT persist these because they
-    // create unpredictable spacing on the frontend. Paragraph spacing should come from CSS.
+    // Editor "blank line" spacer paragraph.
     p.remove();
+  });
+}
+
+function promoteBoldOnlyParagraphHeadings(root: HTMLElement) {
+  // Many contenteditable editors save headings as <p><strong>Heading</strong></p>.
+  // Promote those to semantic headings so frontend styling is predictable.
+  root.querySelectorAll("p").forEach((p) => {
+    const kids = Array.from(p.children);
+    if (kids.length !== 1) return;
+    const only = kids[0] as Element;
+    if (only.tagName !== "STRONG" && only.tagName !== "B") return;
+
+    const text = p.textContent?.replace(/\u00a0/g, " ").trim() ?? "";
+    if (!text) return;
+
+    // Heuristic: don't promote numbered list-ish items like "1. Learn ..." (keep as normal paragraph)
+    if (/^\d+\.\s+/.test(text)) return;
+
+    // Avoid promoting very long lines.
+    if (text.length > 90) return;
+
+    const h3 = document.createElement("h3");
+    h3.innerHTML = only.innerHTML;
+    p.replaceWith(h3);
   });
 }
 
@@ -205,7 +255,7 @@ function cleanupEmptyElements(root: HTMLElement) {
     const html = el.innerHTML.replace(/&nbsp;/gi, "").trim();
     if (!html) {
       if (el.tagName === "P") {
-        // Drop truly empty paragraphs (avoid persisting <p><br></p> spacers).
+        // For rendering, drop truly empty paragraphs.
         el.remove();
       } else {
         el.remove();

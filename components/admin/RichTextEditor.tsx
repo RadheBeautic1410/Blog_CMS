@@ -30,6 +30,7 @@ export default function RichTextEditor({
   const [selectedListType, setSelectedListType] = useState("");
   const [selectedBulletStyle, setSelectedBulletStyle] = useState("");
   const [selectedNumberStyle, setSelectedNumberStyle] = useState("");
+  const [selectedListPreset, setSelectedListPreset] = useState("");
   const [showMediaModal, setShowMediaModal] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [showTableModal, setShowTableModal] = useState(false);
@@ -160,6 +161,7 @@ export default function RichTextEditor({
       setSelectedListType("");
       setSelectedBulletStyle("");
       setSelectedNumberStyle("");
+      setSelectedListPreset("");
       
       // Check active formatting states
       const isBold = document.queryCommandState('bold');
@@ -242,6 +244,7 @@ export default function RichTextEditor({
             } else {
               setSelectedBulletStyle('disc');
             }
+            setSelectedListPreset(`ul:${listStyle && listStyle !== 'disc' ? listStyle : 'disc'}`);
           } else if (tagName === 'ol') {
             setSelectedListType('ol');
             const listStyle = window.getComputedStyle(el).listStyleType;
@@ -250,6 +253,7 @@ export default function RichTextEditor({
             } else {
               setSelectedNumberStyle('decimal');
             }
+            setSelectedListPreset(`ol:${listStyle && listStyle !== 'decimal' ? listStyle : 'decimal'}`);
           }
         }
         const parent = node.parentNode;
@@ -257,6 +261,54 @@ export default function RichTextEditor({
         node = parent;
       }
     }
+  };
+
+  const applyListPreset = (preset: string) => {
+    if (!preset) return;
+    if (preset === "none") {
+      execCommand("insertUnorderedList");
+      execCommand("insertUnorderedList");
+      execCommand("insertOrderedList");
+      execCommand("insertOrderedList");
+      setSelectedListType("");
+      setSelectedBulletStyle("");
+      setSelectedNumberStyle("");
+      setSelectedListPreset("");
+      return;
+    }
+
+    const [type, style] = preset.split(":") as ["ul" | "ol", string];
+
+    // Ensure list exists around the selection
+    execCommand(type === "ul" ? "insertUnorderedList" : "insertOrderedList");
+
+    // Apply style to the closest list element
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && editorRef.current) {
+      const range = selection.getRangeAt(0);
+      let listElement: Node | null = range.commonAncestorContainer;
+      while (listElement && listElement !== editorRef.current) {
+        if (listElement.nodeType === Node.ELEMENT_NODE) {
+          const el = listElement as HTMLElement;
+          if (type === "ul" && el.tagName === "UL") {
+            el.style.listStyleType = style;
+            break;
+          }
+          if (type === "ol" && el.tagName === "OL") {
+            el.style.listStyleType = style;
+            break;
+          }
+        }
+        listElement = listElement.parentNode;
+      }
+    }
+
+    setSelectedListType(type);
+    if (type === "ul") setSelectedBulletStyle(style);
+    if (type === "ol") setSelectedNumberStyle(style);
+    setSelectedListPreset(preset);
+    editorRef.current?.focus();
+    handleInput();
   };
 
   // Update selected values when selection changes
@@ -1431,157 +1483,29 @@ export default function RichTextEditor({
           </ToolbarButton>
           <div className="w-px h-6 bg-[#E5E7EB] mx-1" />
 
-          {/* Lists */}
+          {/* Lists (simplified) */}
           <div className="relative">
             <select
-              value={selectedListType || ""}
-              onChange={(e) => {
-                if (!e.target.value) return;
-                const selection = window.getSelection();
-                if (selection && selection.rangeCount > 0 && editorRef.current) {
-                  const range = selection.getRangeAt(0);
-                  const listType = e.target.value;
-                  
-                  // Check if we're in a list
-                  let listElement = range.commonAncestorContainer;
-                  while (listElement && listElement !== editorRef.current) {
-                    if (listElement.nodeType === Node.ELEMENT_NODE) {
-                      const el = listElement as Element;
-                      if (el.tagName === 'UL' || el.tagName === 'OL') {
-                        // Change list type
-                        if (listType === 'none') {
-                          // Remove list
-                          const parent = el.parentNode;
-                          if (parent) {
-                            while (el.firstChild) {
-                              const li = el.firstChild;
-                              const p = document.createElement('p');
-                              p.appendChild(li.cloneNode(true));
-                              parent.insertBefore(p, el);
-                              el.removeChild(li);
-                            }
-                            parent.removeChild(el);
-                          }
-                          setSelectedListType("");
-                          setSelectedBulletStyle("");
-                          setSelectedNumberStyle("");
-                        } else {
-                          // Change to new list type
-                          const newList = document.createElement(listType === 'ul' ? 'ul' : 'ol');
-                          while (el.firstChild) {
-                            newList.appendChild(el.firstChild);
-                          }
-                          el.parentNode?.replaceChild(newList, el);
-                          setSelectedListType(listType);
-                        }
-                        editorRef.current.focus();
-                        handleInput();
-                        return;
-                      }
-                    }
-                    const parent = listElement.parentNode;
-                    if (!parent) break;
-                    listElement = parent;
-                  }
-                  
-                  // Not in a list, create new one
-                  if (listType !== 'none') {
-                    execCommand(listType === 'ul' ? 'insertUnorderedList' : 'insertOrderedList');
-                    setSelectedListType(listType);
-                  }
-                } else {
-                  if (e.target.value !== 'none') {
-                    execCommand(e.target.value === 'ul' ? 'insertUnorderedList' : 'insertOrderedList');
-                    setSelectedListType(e.target.value);
-                  }
-                }
-              }}
-              className="text-xs px-2 py-1 border border-gray-300 rounded bg-white hover:bg-gray-50"
-              title="List Type"
+              value={selectedListPreset || ""}
+              onChange={(e) => applyListPreset(e.target.value)}
+              className="text-xs px-2 py-1 border border-gray-300 rounded bg-white hover:bg-gray-50 min-w-[150px]"
+              title="Lists"
             >
               <option value="">List</option>
-              <option value="ul">Bullet List</option>
-              <option value="ol">Numbered List</option>
-              <option value="none">Remove List</option>
-            </select>
-          </div>
-          
-          {/* List Style (for bullet lists) */}
-          <div className="relative">
-            <select
-              value={selectedBulletStyle || ""}
-              onChange={(e) => {
-                if (!e.target.value) return;
-                const selection = window.getSelection();
-                if (selection && selection.rangeCount > 0 && editorRef.current) {
-                  const range = selection.getRangeAt(0);
-                  let listElement = range.commonAncestorContainer;
-                  while (listElement && listElement !== editorRef.current) {
-                    if (listElement.nodeType === Node.ELEMENT_NODE) {
-                      const el = listElement as HTMLElement;
-                      if (el.tagName === 'UL') {
-                        el.style.listStyleType = e.target.value;
-                        setSelectedBulletStyle(e.target.value);
-                        editorRef.current.focus();
-                        handleInput();
-                        return;
-                      }
-                    }
-                    const parent = listElement.parentNode;
-                    if (!parent) break;
-                    listElement = parent;
-                  }
-                }
-              }}
-              disabled={selectedListType !== "ul"}
-              className="text-xs px-2 py-1 border border-gray-300 rounded bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Bullet Style"
-            >
-              <option value="">Bullet Style</option>
-              <option value="disc">● Disc</option>
-              <option value="circle">○ Circle</option>
-              <option value="square">■ Square</option>
-              <option value="none">None</option>
-            </select>
-          </div>
-          
-          {/* Numbered List Style */}
-          <div className="relative">
-            <select
-              value={selectedNumberStyle || ""}
-              onChange={(e) => {
-                if (!e.target.value) return;
-                const selection = window.getSelection();
-                if (selection && selection.rangeCount > 0 && editorRef.current) {
-                  const range = selection.getRangeAt(0);
-                  let listElement = range.commonAncestorContainer;
-                  while (listElement && listElement !== editorRef.current) {
-                    if (listElement.nodeType === Node.ELEMENT_NODE) {
-                      const el = listElement as HTMLElement;
-                      if (el.tagName === 'OL') {
-                        el.style.listStyleType = e.target.value;
-                        setSelectedNumberStyle(e.target.value);
-                        editorRef.current.focus();
-                        handleInput();
-                        return;
-                      }
-                    }
-                    const parent = listElement.parentNode;
-                    if (!parent) break;
-                    listElement = parent;
-                  }
-                }
-              }}
-              disabled={selectedListType !== "ol"}
-              className="text-xs px-2 py-1 border border-gray-300 rounded bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Number Style"
-            >
-              <option value="">Number Style</option>
-              <option value="decimal">1, 2, 3</option>
-              <option value="lower-alpha">a, b, c</option>
-              <option value="upper-alpha">A, B, C</option>
-              <option value="lower-roman">i, ii, iii</option>
-              <option value="upper-roman">I, II, III</option>
+              <optgroup label="Bullets">
+                <option value="ul:disc">● Bullet (Disc)</option>
+                <option value="ul:circle">○ Bullet (Circle)</option>
+                <option value="ul:square">■ Bullet (Square)</option>
+                <option value="ul:none">No bullets</option>
+              </optgroup>
+              <optgroup label="Numbered">
+                <option value="ol:decimal">1, 2, 3</option>
+                <option value="ol:lower-alpha">a, b, c</option>
+                <option value="ol:upper-alpha">A, B, C</option>
+                <option value="ol:lower-roman">i, ii, iii</option>
+                <option value="ol:upper-roman">I, II, III</option>
+              </optgroup>
+              <option value="none">Remove list</option>
             </select>
           </div>
           <div className="w-px h-6 bg-[#E5E7EB] mx-1" />
