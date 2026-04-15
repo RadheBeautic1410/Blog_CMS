@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { decrementCategoryCount } from "@/lib/category-count";
 
 export async function POST(
   request: NextRequest,
@@ -13,9 +14,25 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const blog = await prisma.blog.findUnique({
+      where: { id },
+      select: {
+        status: true,
+        category: true,
+      },
+    });
+
+    if (!blog) {
+      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    }
+
     await prisma.blog.delete({
       where: { id },
     });
+
+    if (blog.status === "published") {
+      await decrementCategoryCount(blog.category);
+    }
 
     return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });
   } catch (error: any) {

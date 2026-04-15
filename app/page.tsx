@@ -47,29 +47,11 @@ async function getLatestBlogs() {
 
 async function getCategories() {
   try {
-    const categories = await prisma.category.findMany({
+    return await prisma.category.findMany({
       orderBy: {
         name: "asc",
       },
     });
-
-    // Calculate actual blog counts for each category
-    const categoriesWithCounts = await Promise.all(
-      categories.map(async (category) => {
-        const blogCount = await prisma.blog.count({
-          where: {
-            category: category.name,
-            status: "published",
-          },
-        });
-        return {
-          ...category,
-          count: blogCount,
-        };
-      }),
-    );
-
-    return categoriesWithCounts;
   } catch (error) {
     console.error("Error fetching categories:", error);
     return [];

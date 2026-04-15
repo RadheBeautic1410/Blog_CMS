@@ -13,24 +13,8 @@ async function getCategories() {
       },
     });
 
-    // Calculate actual blog counts for each category
-    const categoriesWithCounts = await Promise.all(
-      categories.map(async (category) => {
-        const blogCount = await prisma.blog.count({
-          where: {
-            category: category.name,
-            status: "published",
-          },
-        });
-        return {
-          ...category,
-          count: blogCount,
-        };
-      })
-    );
-
     // Sort by count (most popular first), then by name
-    const sortedCategories = categoriesWithCounts.sort((a, b) => {
+    const sortedCategories = categories.sort((a, b) => {
       if (b.count !== a.count) {
         return b.count - a.count; // Sort by count descending
       }
