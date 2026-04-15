@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { decrementCategoryCount, incrementCategoryCount } from "@/lib/category-count";
 
 export async function PUT(
   request: NextRequest,
@@ -60,6 +61,20 @@ export async function PUT(
       );
     }
 
+    const currentBlog = await prisma.blog.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        status: true,
+        category: true,
+      },
+    });
+
+    if (!currentBlog) {
+      return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+    }
+
+    const nextStatus = status || "draft";
     const blog = await prisma.blog.update({
       where: { id },
       data: {
@@ -70,13 +85,26 @@ export async function PUT(
         category,
         image,
         tags: (tags || []).map((t: string) => String(t).trim().toLowerCase()).filter(Boolean),
-        status: status || "draft",
+        status: nextStatus,
         metaTitle: metaTitle || null,
         metaDescription: metaDescription || null,
         author: author.name,
         authorId: authorId,
       },
     });
+
+    const wasPublished = currentBlog.status === "published";
+    const willBePublished = nextStatus === "published";
+    const categoryChanged = currentBlog.category !== category;
+
+    if (!wasPublished && willBePublished) {
+      await incrementCategoryCount(category);
+    } else if (wasPublished && !willBePublished) {
+      await decrementCategoryCount(currentBlog.category);
+    } else if (wasPublished && willBePublished && categoryChanged) {
+      await decrementCategoryCount(currentBlog.category);
+      await incrementCategoryCount(category);
+    }
 
     return NextResponse.json({ blog }, { status: 200 });
   } catch (error: any) {

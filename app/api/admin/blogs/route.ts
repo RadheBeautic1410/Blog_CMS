@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { incrementCategoryCount } from "@/lib/category-count";
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const nextStatus = status || "draft";
     const blog = await prisma.blog.create({
       data: {
         title,
@@ -65,7 +67,7 @@ export async function POST(request: NextRequest) {
         category,
         image,
         tags: (tags || []).map((t: string) => String(t).trim().toLowerCase()).filter(Boolean),
-        status: status || "draft",
+        status: nextStatus,
         metaTitle: metaTitle || null,
         metaDescription: metaDescription || null,
         author: author.name,
@@ -73,6 +75,10 @@ export async function POST(request: NextRequest) {
         date: new Date(),
       },
     });
+
+    if (nextStatus === "published") {
+      await incrementCategoryCount(category);
+    }
 
     return NextResponse.json({ blog }, { status: 201 });
   } catch (error: any) {

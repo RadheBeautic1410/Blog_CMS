@@ -18,24 +18,8 @@ async function getCategories(page: number = 1) {
       prisma.category.count(),
     ]);
 
-    // Calculate actual blog counts for each category
-    const categories = await Promise.all(
-      categoriesData.map(async (category) => {
-        const blogCount = await prisma.blog.count({
-          where: {
-            category: category.name,
-            status: "published",
-          },
-        });
-        return {
-          ...category,
-          count: blogCount,
-        };
-      })
-    );
-
     return {
-      categories,
+      categories: categoriesData,
       total,
       totalPages: Math.ceil(total / ITEMS_PER_PAGE),
     };
