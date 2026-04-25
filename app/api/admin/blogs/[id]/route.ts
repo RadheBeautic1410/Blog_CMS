@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { decrementCategoryCount, incrementCategoryCount } from "@/lib/category-count";
+import { revalidateAfterBlogSave } from "@/lib/revalidate-blog-public";
 
 export async function PUT(
   request: NextRequest,
@@ -67,6 +68,7 @@ export async function PUT(
         id: true,
         status: true,
         category: true,
+        slug: true,
       },
     });
 
@@ -105,6 +107,16 @@ export async function PUT(
       await decrementCategoryCount(currentBlog.category);
       await incrementCategoryCount(category);
     }
+
+    await revalidateAfterBlogSave({
+      slug: blog.slug,
+      previousSlug:
+        currentBlog.slug !== blog.slug ? currentBlog.slug : undefined,
+      categoryName: category,
+      previousCategoryName: categoryChanged
+        ? currentBlog.category
+        : undefined,
+    });
 
     return NextResponse.json({ blog }, { status: 200 });
   } catch (error: any) {

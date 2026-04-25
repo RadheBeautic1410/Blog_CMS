@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { decrementCategoryCount } from "@/lib/category-count";
+import { revalidateAfterBlogDelete } from "@/lib/revalidate-blog-public";
 
 export async function POST(
   request: NextRequest,
@@ -19,6 +20,7 @@ export async function POST(
       select: {
         status: true,
         category: true,
+        slug: true,
       },
     });
 
@@ -32,6 +34,10 @@ export async function POST(
 
     if (blog.status === "published") {
       await decrementCategoryCount(blog.category);
+      await revalidateAfterBlogDelete({
+        slug: blog.slug,
+        categoryName: blog.category,
+      });
     }
 
     return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });

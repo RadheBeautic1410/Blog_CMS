@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { revalidateCategoriesPage } from "@/lib/revalidate-blog-public";
 
 export async function POST(
   request: NextRequest,
@@ -44,6 +45,8 @@ export async function POST(
     await prisma.category.delete({
       where: { id },
     });
+
+    revalidateCategoriesPage();
 
     return NextResponse.json(
       { message: "Category deleted successfully" },
