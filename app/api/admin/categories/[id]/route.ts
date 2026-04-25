@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { revalidateCategoriesPage } from "@/lib/revalidate-blog-public";
 
 export async function PUT(
   request: NextRequest,
@@ -55,6 +56,8 @@ export async function PUT(
         slug,
       },
     });
+
+    revalidateCategoriesPage();
 
     return NextResponse.json({ category }, { status: 200 });
   } catch (error: any) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { incrementCategoryCount } from "@/lib/category-count";
+import { revalidateAfterBlogSave } from "@/lib/revalidate-blog-public";
 
 export async function POST(request: NextRequest) {
   try {
@@ -78,6 +79,10 @@ export async function POST(request: NextRequest) {
 
     if (nextStatus === "published") {
       await incrementCategoryCount(category);
+      await revalidateAfterBlogSave({
+        slug: blog.slug,
+        categoryName: category,
+      });
     }
 
     return NextResponse.json({ blog }, { status: 201 });

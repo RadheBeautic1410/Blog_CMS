@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { revalidateCategoriesPage } from "@/lib/revalidate-blog-public";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,6 +52,8 @@ export async function POST(request: NextRequest) {
         count: 0,
       },
     });
+
+    revalidateCategoriesPage();
 
     return NextResponse.json({ category }, { status: 201 });
   } catch (error: any) {
