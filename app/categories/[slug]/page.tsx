@@ -107,7 +107,9 @@ export async function generateMetadata({
   return {
     title: `${category.name} - Blog Posts`,
     description: `Browse all blog posts in the ${category.name} category.`,
-    canonicalUrl: `${NEXT_PUBLIC_URL}/categories/${slug}`,
+    alternates: {
+      canonical: `${NEXT_PUBLIC_URL}/categories/${slug}`,
+    },
     openGraph: {
       title: `${category.name} - Blog Posts`,
       description: `Browse all blog posts in the ${category.name} category.`,
