@@ -3,10 +3,28 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { FlowerIcon } from "@/components/icons";
 import type { Metadata } from "next";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Terms and conditions for using our blog and related services. Please read these terms carefully.",
+  description:
+    "Terms and conditions for using our blog and related services. Please read these terms carefully.",
+  alternates: {
+    canonical: `${NEXT_PUBLIC_URL}/terms`,
+  },
+  openGraph: {
+    title: "Terms of Service",
+    description:
+      "Terms and conditions for using our blog and related services. Please read these terms carefully.",
+    type: "website",
+    url: `${NEXT_PUBLIC_URL}/terms`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms of Service",
+    description:
+      "Terms and conditions for using our blog and related services. Please read these terms carefully.",
+  },
 };
 
 const sections = [
@@ -76,8 +94,14 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-violet-50/30 relative">
       <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10">
-        <FlowerIcon className="absolute -left-8 top-24 h-40 w-40 fill-violet-300/30 rotate-12" aria-hidden />
-        <FlowerIcon className="absolute -right-6 top-1/2 h-28 w-28 fill-indigo-300/25 -rotate-[15deg]" aria-hidden />
+        <FlowerIcon
+          className="absolute -left-8 top-24 h-40 w-40 fill-violet-300/30 rotate-12"
+          aria-hidden
+        />
+        <FlowerIcon
+          className="absolute -right-6 top-1/2 h-28 w-28 fill-indigo-300/25 -rotate-[15deg]"
+          aria-hidden
+        />
       </div>
 
       <Navbar />
@@ -85,15 +109,33 @@ export default function TermsPage() {
         <section className="relative px-4 pt-20 pb-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-br from-violet-100 to-indigo-100 p-4">
-              <svg className="h-10 w-10 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                className="h-10 w-10 text-violet-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
             <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-              Terms of <span className="bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent">Service</span>
+              Terms of{" "}
+              <span className="bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent">
+                Service
+              </span>
             </h1>
             <p className="mt-4 text-slate-600 max-w-xl mx-auto">
-              Last updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+              Last updated:{" "}
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </p>
           </div>
         </section>
@@ -101,7 +143,8 @@ export default function TermsPage() {
         <section className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-24">
           <div className="rounded-2xl border border-slate-200/80 bg-white/95 p-8 shadow-lg shadow-slate-200/40 sm:p-10">
             <p className="text-slate-600 leading-relaxed mb-10">
-              Please read these terms carefully before using our website. By using our blog, you agree to these terms and conditions.
+              Please read these terms carefully before using our website. By
+              using our blog, you agree to these terms and conditions.
             </p>
 
             <div className="space-y-10">
@@ -125,9 +168,13 @@ export default function TermsPage() {
             <div className="mt-12 pt-8 border-t border-slate-200">
               <p className="text-slate-600 text-sm">
                 For questions about these Terms of Service, please{" "}
-                <Link href="/contact" className="text-violet-600 font-medium hover:underline">
+                <Link
+                  href="/contact"
+                  className="text-violet-600 font-medium hover:underline"
+                >
                   contact us
-                </Link>.
+                </Link>
+                .
               </p>
             </div>
           </div>
