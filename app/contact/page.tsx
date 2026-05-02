@@ -9,7 +9,9 @@ import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 export const metadata: Metadata = {
   title: "Contact Us",
   description: "Get in touch with us. We'd love to hear from you — questions, feedback, or collaboration ideas.",
-  canonicalUrl: `${NEXT_PUBLIC_URL}/contact`,
+  alternates: {
+    canonical: `${NEXT_PUBLIC_URL}/contact`,
+  },
   openGraph: {
     title: "Contact Us",
     description: "Get in touch with us. We'd love to hear from you — questions, feedback, or collaboration ideas.",

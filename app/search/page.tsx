@@ -170,7 +170,9 @@ export async function generateMetadata({
   return {
     title: "Search",
     description: "Search our blog for articles and content.",
-    canonicalUrl: `${NEXT_PUBLIC_URL}/search`,
+    alternates: {
+      canonical: `${NEXT_PUBLIC_URL}/search`,
+    },
     openGraph: {
       title: "Search",
       description: "Search our blog for articles and content.",
