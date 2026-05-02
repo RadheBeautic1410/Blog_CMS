@@ -1,9 +1,30 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import CategoryCard from "@/components/CategoryCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FlowerIcon } from "@/components/icons";
 import Link from "next/link";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
+
+export const metadata: Metadata = {
+  title: "Categories",
+  description: "Browse all blog categories to find content that interests you.",
+  alternates: {
+    canonical: `${NEXT_PUBLIC_URL}/categories`,
+  },
+  openGraph: {
+    title: "Categories",
+    description: "Browse all blog categories to find content that interests you.",
+    type: "website",
+    url: `${NEXT_PUBLIC_URL}/categories`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Categories",
+    description: "Browse all blog categories to find content that interests you.",
+  },
+};
 
 async function getCategories() {
   try {

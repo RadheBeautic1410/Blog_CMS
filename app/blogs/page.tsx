@@ -1,8 +1,32 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import BlogCard from "@/components/BlogCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
+
+export const metadata: Metadata = {
+  title: "All Blog Posts",
+  description:
+    "Browse all our blog posts and articles on technology, business, programming, and lifestyle.",
+  alternates: {
+    canonical: `${NEXT_PUBLIC_URL}/blogs`,
+  },
+  openGraph: {
+    title: "All Blog Posts",
+    description:
+      "Browse all our blog posts and articles on technology, business, programming, and lifestyle.",
+    type: "website",
+    url: `${NEXT_PUBLIC_URL}/blogs`,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "All Blog Posts",
+    description:
+      "Browse all our blog posts and articles on technology, business, programming, and lifestyle.",
+  },
+};
 
 // Function to shuffle array randomly
 function shuffleArray<T>(array: T[]): T[] {
@@ -137,16 +161,13 @@ export default async function BlogsPage({
                         page === currentPage + 2
                       ) {
                         return (
-                          <span
-                            key={page}
-                            className="px-2 text-gray-500"
-                          >
+                          <span key={page} className="px-2 text-gray-500">
                             ...
                           </span>
                         );
                       }
                       return null;
-                    }
+                    },
                   )}
                 </div>
 

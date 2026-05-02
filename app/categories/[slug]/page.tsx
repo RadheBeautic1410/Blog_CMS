@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import BlogCard from "@/components/BlogCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 
 async function getCategoryBySlug(slug: string) {
   try {
@@ -86,6 +88,38 @@ async function getBlogsByCategory(categoryName: string, page: number = 1, perPag
       currentPage: 1,
     };
   }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const category = await getCategoryBySlug(slug);
+
+  if (!category) {
+    return {
+      title: "Category Not Found",
+    };
+  }
+
+  return {
+    title: `${category.name} - Blog Posts`,
+    description: `Browse all blog posts in the ${category.name} category.`,
+    canonicalUrl: `${NEXT_PUBLIC_URL}/categories/${slug}`,
+    openGraph: {
+      title: `${category.name} - Blog Posts`,
+      description: `Browse all blog posts in the ${category.name} category.`,
+      type: "website",
+      url: `${NEXT_PUBLIC_URL}/categories/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${category.name} - Blog Posts`,
+      description: `Browse all blog posts in the ${category.name} category.`,
+    },
+  };
 }
 
 export default async function CategoryPage({

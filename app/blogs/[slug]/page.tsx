@@ -11,6 +11,7 @@ import { FlowerIcon } from "@/components/icons";
 import type { Metadata } from "next";
 import BlogHtmlContent from "@/components/BlogHtmlContent";
 import { unstable_noStore as noStore } from "next/cache";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 
 async function getBlog(slug: string) {
   noStore();
@@ -81,6 +82,9 @@ export async function generateMetadata({
   return {
     title: blog.metaTitle || blog.title,
     description: blog.metaDescription || blog.excerpt,
+    alternates: {
+      canonical: `${NEXT_PUBLIC_URL}/blogs/${blog.slug}`,
+    },
     openGraph: {
       title: blog.metaTitle || blog.title,
       description: blog.metaDescription || blog.excerpt,
@@ -88,6 +92,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: blog.date.toString(),
       authors: [blog.author],
+      url: `${NEXT_PUBLIC_URL}/blogs/${blog.slug}`,
     },
     twitter: {
       card: "summary_large_image",

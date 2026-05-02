@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import BlogCard from "@/components/BlogCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 
 async function searchBlogs(query: string) {
   try {
@@ -52,7 +54,11 @@ async function searchBlogs(query: string) {
   }
 }
 
-async function SearchResults({ searchParams }: { searchParams: { q?: string } }) {
+async function SearchResults({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
   const query = searchParams.q || "";
   const blogs = await searchBlogs(query);
 
@@ -96,7 +102,9 @@ async function SearchResults({ searchParams }: { searchParams: { q?: string } })
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900">No results found</h3>
+            <h3 className="mt-4 text-lg font-medium text-gray-900">
+              No results found
+            </h3>
             <p className="mt-2 text-sm text-gray-500">
               Try adjusting your search terms or browse our categories.
             </p>
@@ -111,7 +119,9 @@ async function SearchResults({ searchParams }: { searchParams: { q?: string } })
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-500">Enter a search query to find articles.</p>
+            <p className="text-gray-500">
+              Enter a search query to find articles.
+            </p>
             <div className="mt-6">
               <Link
                 href="/"
@@ -126,6 +136,53 @@ async function SearchResults({ searchParams }: { searchParams: { q?: string } })
       <Footer />
     </div>
   );
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}): Promise<Metadata> {
+  const query = searchParams.q || "";
+
+  if (query) {
+    return {
+      title: `Search Results for "${query}"`,
+      description: `Search results for "${query}" on our blog.`,
+      alternates: {
+        canonical: `${NEXT_PUBLIC_URL}/search`,
+      },
+      robots: "noindex, nofollow",
+      openGraph: {
+        title: `Search Results for "${query}"`,
+        description: `Search results for "${query}" on our blog.`,
+        type: "website",
+        url: `${NEXT_PUBLIC_URL}/search`,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `Search Results for "${query}"`,
+        description: `Search results for "${query}" on our blog.`,
+      },
+    };
+  }
+
+  return {
+    title: "Search",
+    description: "Search our blog for articles and content.",
+    canonicalUrl: `${NEXT_PUBLIC_URL}/search`,
+    openGraph: {
+      title: "Search",
+      description: "Search our blog for articles and content.",
+      type: "website",
+      url: `${NEXT_PUBLIC_URL}/search`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Search",
+      description: "Search our blog for articles and content.",
+    },
+  };
 }
 
 export default function SearchPage({

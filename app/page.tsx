@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import BlogCard from "@/components/BlogCard";
@@ -7,6 +8,29 @@ import Footer from "@/components/Footer";
 import Button from "@/components/ui/Button";
 import { prisma } from "@/lib/prisma";
 import { FlowerIcon } from "@/components/icons";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
+
+export const metadata: Metadata = {
+  title: "Factiso - Tech Insights, Business Tips & Lifestyle Blog",
+  description:
+    "Explore insightful articles on technology, business, programming, and lifestyle. Learn from experts and stay updated with the latest trends.",
+  alternates: {
+    canonical: NEXT_PUBLIC_URL,
+  },
+  openGraph: {
+    title: "Factiso - Tech Insights, Business Tips & Lifestyle Blog",
+    description:
+      "Explore insightful articles on technology, business, programming, and lifestyle. Learn from experts and stay updated with the latest trends.",
+    type: "website",
+    url: NEXT_PUBLIC_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Factiso - Tech Insights, Business Tips & Lifestyle Blog",
+    description:
+      "Explore insightful articles on technology, business, programming, and lifestyle. Learn from experts and stay updated with the latest trends.",
+  },
+};
 
 async function getFeaturedBlogs() {
   try {
@@ -73,7 +97,10 @@ export default async function Home() {
         <Hero />
 
         {/* Featured Blog Section */}
-        <section id="featured" className="relative overflow-hidden py-5 lg:py-10">
+        <section
+          id="featured"
+          className="relative overflow-hidden py-5 lg:py-10"
+        >
           {/* Wavy decorative background */}
           <div
             className="pointer-events-none absolute -left-20 top-1/2 h-80 w-80 -translate-y-1/2 opacity-30"
@@ -105,7 +132,10 @@ export default async function Home() {
 
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center">
-              <FlowerIcon className="flower-spin w-12 h-12 text-[#ff2056c4]" aria-hidden />
+              <FlowerIcon
+                className="flower-spin w-12 h-12 text-[#ff2056c4]"
+                aria-hidden
+              />
             </div>
             <div className="mb-14 text-center">
               <h2 className="font-display text-3xl font-bold tracking-tight text-[#111827] sm:text-4xl">
@@ -132,8 +162,14 @@ export default async function Home() {
         {/* Latest Blogs Section */}
         <section className="relative overflow-hidden py-5 lg:py-10 bg-slate-50">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <FlowerIcon className="absolute right-20 top-12 h-20 w-20 fill-indigo-200/30" aria-hidden />
-            <FlowerIcon className="absolute left-8 bottom-16 h-16 w-16 fill-violet-200/30" aria-hidden />
+            <FlowerIcon
+              className="absolute right-20 top-12 h-20 w-20 fill-indigo-200/30"
+              aria-hidden
+            />
+            <FlowerIcon
+              className="absolute left-8 bottom-16 h-16 w-16 fill-violet-200/30"
+              aria-hidden
+            />
           </div>
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-14 text-center">
@@ -186,7 +222,10 @@ export default async function Home() {
             className="pointer-events-none absolute -left-20 top-1/2 h-80 w-80 -translate-y-1/2 opacity-30"
             aria-hidden
           >
-            <svg viewBox="0 0 200 200" className="h-full w-full text-emerald-200">
+            <svg
+              viewBox="0 0 200 200"
+              className="h-full w-full text-emerald-200"
+            >
               <path
                 fill="currentColor"
                 d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.6,90,-16.3,88.5,-0.9C87,14.6,81.4,29.2,73.1,42.8C64.8,56.4,53.8,69,40.1,76.6C26.4,84.2,10,86.8,-6.4,87.6C-22.8,88.4,-39.2,87.4,-54.3,82.1C-69.4,76.8,-83.2,67.2,-91.5,54.6C-99.8,42,-102.6,26.4,-100.8,11.7C-99,-3,-92.6,-16.8,-84.4,-29.1C-76.2,-41.4,-66.2,-52.2,-53.9,-60.4C-41.6,-68.6,-26.9,-74.2,-11.8,-77.2C3.3,-80.2,30.6,-83.6,44.7,-76.4Z"
@@ -198,7 +237,10 @@ export default async function Home() {
             className="pointer-events-none absolute -right-16 top-20 h-64 w-64 opacity-20"
             aria-hidden
           >
-            <svg viewBox="0 0 200 200" className="h-full w-full text-violet-200">
+            <svg
+              viewBox="0 0 200 200"
+              className="h-full w-full text-violet-200"
+            >
               <path
                 fill="currentColor"
                 d="M39.6,-65.2C51.2,-57.4,61.2,-47.1,68.1,-34.9C75,-22.7,78.8,-8.6,78.3,5.7C77.8,20,73,34.5,64.2,46.4C55.4,58.3,42.6,67.6,28.6,73.1C14.6,78.6,-0.6,80.3,-15.2,77.8C-29.8,75.3,-43.8,68.6,-55.2,58.9C-66.6,49.2,-75.4,36.5,-79.6,22.6C-83.8,8.7,-83.4,-6.4,-78.5,-19.8C-73.6,-33.2,-64.2,-44.9,-52.1,-52.8C-40,-60.7,-25.2,-64.8,-10.7,-67.5C3.8,-70.2,28,-73,39.6,-65.2Z"

@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import BlogCard from "@/components/BlogCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { NEXT_PUBLIC_URL } from "@/app/constants/env";
 
 const PER_PAGE = 12;
 
@@ -63,6 +65,35 @@ async function getBlogsByTag(tagSlug: string, page: number = 1) {
       currentPage: 1,
     };
   }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const tagSlug = decodeURIComponent(slug).toLowerCase();
+  const tagLabel = tagSlug.charAt(0).toUpperCase() + tagSlug.slice(1);
+
+  return {
+    title: `#${tagLabel} - Blog Posts`,
+    description: `Browse all blog posts tagged with #${tagLabel}.`,
+    alternates: {
+      canonical: `${NEXT_PUBLIC_URL}/tags/${slug}`,
+    },
+    openGraph: {
+      title: `#${tagLabel} - Blog Posts`,
+      description: `Browse all blog posts tagged with #${tagLabel}.`,
+      type: "website",
+      url: `${NEXT_PUBLIC_URL}/tags/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `#${tagLabel} - Blog Posts`,
+      description: `Browse all blog posts tagged with #${tagLabel}.`,
+    },
+  };
 }
 
 export default async function TagPage({
