@@ -141,9 +141,10 @@ async function SearchResults({
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }): Promise<Metadata> {
-  const query = searchParams.q || "";
+  const { q } = await searchParams;
+  const query = q || "";
 
   if (query) {
     return {
@@ -187,11 +188,12 @@ export async function generateMetadata({
   };
 }
 
-export default function SearchPage({
+export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense
       fallback={
@@ -206,7 +208,7 @@ export default function SearchPage({
         </div>
       }
     >
-      <SearchResults searchParams={searchParams} />
+      <SearchResults searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }

@@ -38,9 +38,10 @@ async function getAuthors(page: number = 1) {
 export default async function AuthorsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10) || 1);
   const { authors, totalPages } = await getAuthors(currentPage);
 
   return (

@@ -101,10 +101,11 @@ export default async function TagPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
-  const currentPage = Math.max(1, parseInt(searchParams.page || "1", 10));
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10) || 1);
   const tagSlug = decodeURIComponent(slug).toLowerCase();
 
   const { blogs, total, totalPages } = await getBlogsByTag(tagSlug, currentPage);
