@@ -28,49 +28,44 @@ export const metadata: Metadata = {
   },
 };
 
-// Function to shuffle array randomly
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
-
-async function getRandomBlogs(page: number = 1, perPage: number = 12) {
+async function getPublishedBlogs(page: number = 1, perPage: number = 12) {
   try {
-    // Fetch all published blogs
-    const allBlogs = await prisma.blog.findMany({
-      where: {
-        status: "published",
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        author: true,
-        category: true,
-        image: true,
-        date: true,
-        createdAt: true,
-        featured: true,
-      },
-    });
+    const skip = (page - 1) * perPage;
 
-    // Shuffle the blogs randomly
-    const shuffledBlogs = shuffleArray(allBlogs);
+    const [blogs, total] = await Promise.all([
+      prisma.blog.findMany({
+        where: {
+          status: "published",
+        },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          excerpt: true,
+          author: true,
+          category: true,
+          image: true,
+          date: true,
+          createdAt: true,
+          featured: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: perPage,
+      }),
+      prisma.blog.count({
+        where: {
+          status: "published",
+        },
+      }),
+    ]);
 
-    // Calculate pagination
-    const total = shuffledBlogs.length;
     const totalPages = Math.ceil(total / perPage);
-    const startIndex = (page - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const paginatedBlogs = shuffledBlogs.slice(startIndex, endIndex);
 
     return {
-      blogs: paginatedBlogs,
+      blogs,
       total,
       totalPages,
       currentPage: page,
@@ -89,10 +84,11 @@ async function getRandomBlogs(page: number = 1, perPage: number = 12) {
 export default async function BlogsPage({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const currentPage = parseInt(searchParams.page || "1", 10);
-  const { blogs, total, totalPages } = await getRandomBlogs(currentPage);
+  const { page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam || "1", 10) || 1);
+  const { blogs, total, totalPages } = await getPublishedBlogs(currentPage);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
