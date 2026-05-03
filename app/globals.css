@@ -147,13 +147,13 @@ h3 {
 }
 
 .rich-text-editor [contenteditable] a {
-  color: var(--primary);
+  color: #2563eb;
   text-decoration: underline;
   transition: color 0.2s ease;
 }
 
 .rich-text-editor [contenteditable] a:hover {
-  color: var(--primary-dark);
+  color: #1d4ed8;
 }
 
 .rich-text-editor [contenteditable] blockquote {
@@ -312,7 +312,7 @@ h3 {
 }
 
 .blog-content a {
-  @apply text-indigo-600 hover:text-indigo-700 underline transition-colors;
+  @apply text-blue-600 hover:text-blue-700 underline transition-colors;
 }
 
 .blog-content blockquote {
