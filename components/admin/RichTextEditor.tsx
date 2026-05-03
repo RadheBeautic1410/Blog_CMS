@@ -19,6 +19,8 @@ export default function RichTextEditor({
   placeholder = "Write your content here...",
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  /** Selection is lost when the link modal focuses its inputs; keep a DOM range to insert correctly. */
+  const savedLinkRangeRef = useRef<Range | null>(null);
   const [showColorPicker, setShowColorPicker] = useState<"text" | "bg" | null>(null);
   const [showFontSize, setShowFontSize] = useState(false);
   const [showFontFamily, setShowFontFamily] = useState(false);
@@ -837,6 +839,14 @@ export default function RichTextEditor({
       }
     }
 
+    savedLinkRangeRef.current = null;
+    if (selection && selection.rangeCount > 0 && editorRef.current) {
+      const r = selection.getRangeAt(0);
+      if (editorRef.current.contains(r.commonAncestorContainer)) {
+        savedLinkRangeRef.current = r.cloneRange();
+      }
+    }
+
     setLinkModalUrl(url);
     setLinkModalText(text);
     setShowLinkModal(true);
@@ -844,6 +854,13 @@ export default function RichTextEditor({
 
   const handleInsertLink = (url: string, text?: string) => {
     if (!editorRef.current) return;
+
+    const committedRange =
+      savedLinkRangeRef.current &&
+      editorRef.current.contains(savedLinkRangeRef.current.commonAncestorContainer)
+        ? savedLinkRangeRef.current.cloneRange()
+        : null;
+    savedLinkRangeRef.current = null;
 
     editorRef.current.focus();
     
@@ -854,12 +871,18 @@ export default function RichTextEditor({
       const selection = window.getSelection();
       let range: Range | null = null;
 
-      // Try to get existing selection
+      // Prefer a live selection in the editor, else the range captured before the modal took focus
       if (selection && selection.rangeCount > 0) {
-        range = selection.getRangeAt(0);
-        // Check if range is within the editor
-        if (!editorRef.current.contains(range.commonAncestorContainer)) {
-          range = null;
+        const candidate = selection.getRangeAt(0);
+        if (editorRef.current.contains(candidate.commonAncestorContainer)) {
+          range = candidate;
+        }
+      }
+      if (!range && committedRange && editorRef.current.contains(committedRange.commonAncestorContainer)) {
+        range = committedRange;
+        if (selection) {
+          selection.removeAllRanges();
+          selection.addRange(range.cloneRange());
         }
       }
 
@@ -900,6 +923,7 @@ export default function RichTextEditor({
       if (existingLinkElement) {
         // Update existing link
         existingLinkElement.setAttribute("href", url);
+        existingLinkElement.contentEditable = "false";
         if (text) {
           existingLinkElement.textContent = text;
         }
@@ -912,6 +936,7 @@ export default function RichTextEditor({
       const link = document.createElement("a");
       link.href = url;
       link.textContent = text || selectedText || url;
+      link.contentEditable = "false";
       // Apply link styles explicitly
       link.style.color = "#2563EB";
       link.style.textDecoration = "underline";
@@ -953,11 +978,13 @@ export default function RichTextEditor({
 
   const ToolbarButton = ({
     onClick,
+    onMouseDown,
     title,
     children,
     active = false,
   }: {
     onClick: () => void;
+    onMouseDown?: (event: React.MouseEvent<HTMLButtonElement>) => void;
     title: string;
     children: React.ReactNode;
     active?: boolean;
@@ -965,6 +992,7 @@ export default function RichTextEditor({
     <button
       type="button"
       onClick={onClick}
+      onMouseDown={onMouseDown}
       className={`p-1.5 rounded transition-colors ${
         active 
           ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]" 
@@ -1258,6 +1286,9 @@ export default function RichTextEditor({
           {/* Link */}
           <ToolbarButton
             onClick={handleOpenLinkModal}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
             title="Insert Link"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1566,7 +1597,10 @@ export default function RichTextEditor({
       />
       <LinkModal
         isOpen={showLinkModal}
-        onClose={() => setShowLinkModal(false)}
+        onClose={() => {
+          savedLinkRangeRef.current = null;
+          setShowLinkModal(false);
+        }}
         onInsert={handleInsertLink}
         initialUrl={linkModalUrl}
         initialText={linkModalText}
