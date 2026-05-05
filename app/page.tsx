@@ -36,13 +36,12 @@ async function getFeaturedBlogs() {
   try {
     const blogs = await prisma.blog.findMany({
       where: {
-        featured: true,
         status: "published",
       },
       orderBy: {
         createdAt: "desc",
       },
-      take: 6,
+      take: 3,
     });
     return blogs;
   } catch (error) {
