@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const lexend = Lexend({
@@ -23,6 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lexend.variable} font-sans antialiased`}>
         {children}
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="UiYqrssSU7dTlsLn2acJjw"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

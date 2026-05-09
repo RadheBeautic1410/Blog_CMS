@@ -176,7 +176,7 @@ export default async function BlogDetailPage({
             )}
 
             {/* Title */}
-            <h1 className="font-display text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl leading-tight">
+            <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl leading-tight">
               {blog.title}
             </h1>
 
