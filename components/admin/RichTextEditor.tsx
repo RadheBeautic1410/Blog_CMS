@@ -871,18 +871,21 @@ export default function RichTextEditor({
       const selection = window.getSelection();
       let range: Range | null = null;
 
-      // Prefer a live selection in the editor, else the range captured before the modal took focus
-      if (selection && selection.rangeCount > 0) {
-        const candidate = selection.getRangeAt(0);
-        if (editorRef.current.contains(candidate.commonAncestorContainer)) {
-          range = candidate;
-        }
-      }
-      if (!range && committedRange && editorRef.current.contains(committedRange.commonAncestorContainer)) {
-        range = committedRange;
+      // After the modal closes, focus() often resets the caret to the start of the editor.
+      // Prefer the range we saved when opening the link dialog — not the live selection.
+      if (
+        committedRange &&
+        editorRef.current.contains(committedRange.commonAncestorContainer)
+      ) {
+        range = committedRange.cloneRange();
         if (selection) {
           selection.removeAllRanges();
           selection.addRange(range.cloneRange());
+        }
+      } else if (selection && selection.rangeCount > 0) {
+        const candidate = selection.getRangeAt(0);
+        if (editorRef.current.contains(candidate.commonAncestorContainer)) {
+          range = candidate.cloneRange();
         }
       }
 
