@@ -30,26 +30,41 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* Headings - Recoleta only */
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Recoleta", Georgia, serif;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
+/* Headings - Recoleta only (in @layer base so Tailwind utilities can override) */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Recoleta", Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
 
-h1 {
-  font-size: 3.5rem;
-  line-height: 1.2;
-}
+  h1 {
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
 
-h2 {
-  font-size: 2.5rem;
-  line-height: 1.3;
-}
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+    }
+  }
 
-h3 {
-  font-size: 1.875rem;
-  line-height: 1.4;
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 3.5rem;
+    }
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1.875rem;
+    line-height: 1.4;
+  }
 }
 
 .font-display,
@@ -203,22 +218,22 @@ h3 {
 }
 
 .blog-content h1 {
-  @apply text-4xl font-bold;
+  @apply text-3xl font-bold sm:text-4xl;
   letter-spacing: -0.5px;
 }
 
 .blog-content h2 {
-  @apply text-4xl font-bold;
+  @apply text-2xl font-bold sm:text-3xl md:text-4xl;
   letter-spacing: -0.5px;
 }
 
 .blog-content h3 {
-  @apply text-3xl font-semibold;
+  @apply text-xl font-semibold sm:text-2xl md:text-3xl;
   letter-spacing: -0.3px;
 }
 
 .blog-content h4 {
-  @apply text-2xl font-semibold;
+  @apply text-lg font-semibold sm:text-xl md:text-2xl;
 }
 
 .blog-content h5 {
