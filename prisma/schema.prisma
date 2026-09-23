@@ -93,3 +93,65 @@ model NewsletterSubscriber {
 
   @@map("newsletter_subscribers")
 }
+
+// ---------------------------------------------------------------------------
+// Orbit: daily automated blog writing + publishing
+// ---------------------------------------------------------------------------
+
+model OrbitSettings {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  key               String    @unique @default("default") // singleton row
+  enabled           Boolean   @default(false)
+  provider          String    @default("gemini") // gemini, anthropic, openai, groq
+  model             String    @default("gemini-2.5-flash")
+  autoPublish       Boolean   @default(false) // false => save as draft for review
+  authorId          String?   // Author used for generated posts
+  categories        String[]  // categories Orbit may write for
+  defaultImage      String?   // fallback featured image URL
+  wordCount         Int       @default(1200)
+  tone              String    @default("informative, friendly and SEO-optimized")
+  language          String    @default("English")
+  extraInstructions String?   // free-form house style rules
+  lastRunAt         DateTime?
+  lastRunStatus     String?   // success, failed, skipped
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("orbit_settings")
+}
+
+model OrbitTopic {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  keywords  String[]
+  category  String?
+  notes     String?
+  status    String    @default("pending") // pending, used, failed
+  source    String    @default("manual")  // manual, ai
+  usedAt    DateTime?
+  blogId    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("orbit_topics")
+}
+
+model OrbitRun {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  status     String   // success, failed, skipped
+  trigger    String   // cron, manual
+  topic      String?
+  topicId    String?
+  blogId     String?
+  blogSlug   String?
+  blogTitle  String?
+  blogStatus String?  // published, draft
+  provider   String?
+  model      String?
+  message    String?
+  error      String?
+  durationMs Int?
+  createdAt  DateTime @default(now())
+
+  @@map("orbit_runs")
+}
